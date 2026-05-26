@@ -1,6 +1,6 @@
 import { getPayload } from 'payload'
 import { NextRequest, NextResponse } from 'next/server'
-import config from '../../../../payload.config'
+import config from '../../../payload.config'
 
 export async function POST(req: NextRequest) {
   const auth = req.headers.get('Authorization')
