@@ -4,10 +4,15 @@ import config from '../../../payload.config'
 
 export async function POST(req: NextRequest) {
   const auth = req.headers.get('Authorization')
-  if (auth !== `Bearer ${process.env.PIPELINE_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const expected = `Bearer ${process.env.PIPELINE_SECRET}`
+  
+  console.log('[pipeline] Auth received:', auth)
+  console.log('[pipeline] Expected:', expected)
+  console.log('[pipeline] PIPELINE_SECRET env:', process.env.PIPELINE_SECRET)
 
+  if (auth !== expected) {
+    return NextResponse.json({ error: 'Unauthorized', received: auth, expected }, { status: 401 })
+  }
   try {
     const payload = await getPayload({ config })
     const body = await req.json()
