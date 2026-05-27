@@ -75,11 +75,6 @@ export const Articles: CollectionConfig = {
     {
       name: 'featuredImageUrl',
       type: 'text',
-      admin: {
-        components: {
-          afterInput: ['@/components/FeaturedImagePreview#FeaturedImagePreview'],
-        },
-      },
     },
     {
       name: 'metaTitle',
