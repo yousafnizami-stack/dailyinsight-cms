@@ -129,6 +129,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  name?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -155,12 +156,28 @@ export interface User {
 export interface Media {
   id: number;
   alt: string;
+  cloudinaryPublicId?: string | null;
+  cloudinaryUrl?: string | null;
+  cloudinaryResourceType?: string | null;
+  cloudinaryFormat?: string | null;
+  cloudinaryVersion?: number | null;
+  /**
+   * Direct URL to the original file without transformations
+   */
+  originalUrl?: string | null;
+  /**
+   * URL with applied transformations
+   */
+  transformedUrl?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
   thumbnailURL?: string | null;
   filename?: string | null;
   mimeType?: string | null;
+  /**
+   * File size in bytes
+   */
   filesize?: number | null;
   width?: number | null;
   height?: number | null;
@@ -196,6 +213,7 @@ export interface Article {
   excerpt?: string | null;
   featuredImage?: (number | null) | Media;
   featuredImageAlt?: string | null;
+  featuredImageUrl?: string | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
   tags?:
@@ -349,6 +367,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -372,6 +391,13 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  cloudinaryPublicId?: T;
+  cloudinaryUrl?: T;
+  cloudinaryResourceType?: T;
+  cloudinaryFormat?: T;
+  cloudinaryVersion?: T;
+  originalUrl?: T;
+  transformedUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -398,6 +424,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   excerpt?: T;
   featuredImage?: T;
   featuredImageAlt?: T;
+  featuredImageUrl?: T;
   metaTitle?: T;
   metaDescription?: T;
   tags?:
