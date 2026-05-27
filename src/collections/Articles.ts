@@ -1,5 +1,4 @@
 import type { CollectionConfig } from 'payload'
-import { FeaturedImagePreview } from '../components/FeaturedImagePreview'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -75,7 +74,7 @@ export const Articles: CollectionConfig = {
       type: 'text',
       admin: {
         components: {
-          afterInput: [FeaturedImagePreview],
+          afterInput: ['../components/FeaturedImagePreview#FeaturedImagePreview'],
         },
       },
     },
