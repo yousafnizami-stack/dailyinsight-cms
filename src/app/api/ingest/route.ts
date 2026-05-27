@@ -39,18 +39,35 @@ export async function POST(req: NextRequest) {
       const buffer = Buffer.from(arrayBuffer)
       const filename = imageUrl.split('/').pop()?.split('?')[0] ?? 'image.jpg'
 
-      const media = await payload.create({
-        collection: 'media',
-        data: { alt: body.featuredImageAlt ?? body.title ?? filename },
-        file: {
-          data: buffer,
-          mimetype: contentType,
-          name: filename,
-          size: buffer.length,
-        },
-        overrideAccess: true,
-      })
-      featuredImageId = media.id
+      try {
+        const media = await payload.create({
+          collection: 'media',
+          data: { alt: body.featuredImageAlt ?? body.title ?? filename },
+          file: {
+            data: buffer,
+            mimetype: contentType,
+            name: filename,
+            size: buffer.length,
+          },
+          overrideAccess: true,
+        })
+        featuredImageId = media.id
+        console.log(`[ingest] Media created: id=${media.id} filename=${filename}`)
+      } catch (mediaErr: any) {
+        console.error('[ingest] Failed to create media document:', {
+          message: mediaErr.message,
+          stack: mediaErr.stack,
+          data: mediaErr.data ?? null,
+          imageUrl,
+          filename,
+          contentType,
+          bufferSize: buffer.length,
+        })
+        return NextResponse.json(
+          { error: `Media upload failed: ${mediaErr.message}`, imageUrl, filename },
+          { status: 500 },
+        )
+      }
     }
 
     const { category, featuredImage, ...rest } = body
@@ -65,6 +82,7 @@ export async function POST(req: NextRequest) {
     })
     return NextResponse.json({ id: article.id }, { status: 201 })
   } catch (err: any) {
+    console.error('[ingest] Unhandled error:', { message: err.message, stack: err.stack, data: err.data ?? null })
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }
