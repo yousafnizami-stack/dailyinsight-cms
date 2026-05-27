@@ -13,6 +13,7 @@ export const Articles: CollectionConfig = {
     defaultColumns: ['title', 'status', 'category', 'publishedAt'],
     pagination: {
       defaultLimit: 50,
+      limits: [10, 25, 50, 100],
     },
   },
   fields: [
