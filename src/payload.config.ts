@@ -21,7 +21,15 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: '- Daily Insight CMS',
+    },
   },
+  routes: {
+    admin: '/admin',
+  },
+  cookiePrefix: 'dailyinsight',
+  tokenExpiration: 2592000,
   collections: [Users, Media, Articles, Categories, Authors],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
