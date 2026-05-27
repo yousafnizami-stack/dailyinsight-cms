@@ -2,6 +2,12 @@ import type { CollectionConfig } from 'payload'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  versions: {
+    maxPerDoc: 20,
+    drafts: {
+      autosave: false,
+    },
+  },
   access: {
     create: ({ req: { user } }) => Boolean(user),
     read: () => true,
