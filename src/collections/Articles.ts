@@ -56,7 +56,6 @@ export const Articles: CollectionConfig = {
     {
       name: 'body',
       type: 'richText',
-      editor: lexicalEditor(),
     },
     {
       name: 'excerpt',
