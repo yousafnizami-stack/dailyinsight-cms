@@ -72,6 +72,10 @@ export const Articles: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'featuredImageUrl',
+      type: 'text',
+    },
+    {
       name: 'metaTitle',
       type: 'text',
     },
