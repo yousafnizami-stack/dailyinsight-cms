@@ -36,3 +36,10 @@ export async function POST(req: NextRequest) {
         ...(categoryId !== undefined && { category: categoryId }),
         ...(featuredImageUrl !== undefined && { featuredImageUrl }),
       },
+      overrideAccess: true,
+    })
+    return NextResponse.json({ id: article.id }, { status: 201 })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
