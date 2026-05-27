@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  versions: {
+    maxPerDoc: 20,
+  },
   access: {
     create: ({ req: { user } }) => Boolean(user),
     read: () => true,
@@ -72,6 +75,11 @@ export const Articles: CollectionConfig = {
     {
       name: 'featuredImageUrl',
       type: 'text',
+      admin: {
+        components: {
+          afterInput: ['@/components/FeaturedImagePreview#FeaturedImagePreview'],
+        },
+      },
     },
     {
       name: 'metaTitle',
