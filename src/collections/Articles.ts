@@ -74,7 +74,7 @@ export const Articles: CollectionConfig = {
       type: 'text',
       admin: {
         components: {
-          afterInput: ['../components/FeaturedImagePreview#FeaturedImagePreview'],
+          afterInput: ['@/components/FeaturedImagePreview#FeaturedImagePreview'],
         },
       },
     },
