@@ -29,7 +29,6 @@ export default buildConfig({
     admin: '/admin',
   },
   cookiePrefix: 'dailyinsight',
-  tokenExpiration: 2592000,
   collections: [Users, Media, Articles, Categories, Authors],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
