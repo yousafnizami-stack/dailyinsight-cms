@@ -11,6 +11,9 @@ export const Articles: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'status', 'category', 'publishedAt'],
+    pagination: {
+      defaultLimit: 50,
+    },
   },
   fields: [
     {
