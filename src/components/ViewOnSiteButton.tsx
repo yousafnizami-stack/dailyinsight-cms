@@ -1,15 +1,14 @@
 'use client'
 
-import { useFormFields } from '@payloadcms/ui'
+import { useDocumentInfo } from '@payloadcms/ui'
 
 export function ViewOnSiteButton() {
-  const slug = useFormFields(([fields]) => fields['slug']?.value as string | undefined)
-  const categoryValue = useFormFields(([fields]) => fields['category']?.value)
+  const { initialData, savedDocumentData } = useDocumentInfo()
+  const doc = (savedDocumentData || initialData) as Record<string, any> | undefined
 
-  const categorySlug =
-    categoryValue && typeof categoryValue === 'object' && !Array.isArray(categoryValue)
-      ? (categoryValue as { slug?: string }).slug
-      : null
+  const slug = doc?.slug as string | undefined
+  const category = doc?.category as { slug?: string } | null | undefined
+  const categorySlug = category && typeof category === 'object' ? category.slug : null
 
   if (!slug || !categorySlug) return null
 
