@@ -1,45 +1,38 @@
-import type { BeforeDocumentControlsServerProps } from 'payload'
+'use client'
 
-export async function ViewOnSiteButton({ id, payload }: BeforeDocumentControlsServerProps) {
-  if (!id || !payload) return null
+import { useFormFields } from '@payloadcms/ui'
 
-  try {
-    const doc = await payload.findByID({
-      collection: 'articles',
-      id,
-      depth: 1,
-      overrideAccess: true,
-    })
+export function ViewOnSiteButton() {
+  const slug = useFormFields(([fields]) => fields['slug']?.value as string | undefined)
+  const categoryValue = useFormFields(([fields]) => fields['category']?.value)
 
-    const slug = doc?.slug as string | undefined
-    const category = doc?.category as { slug?: string } | string | null | undefined
-    const categorySlug = category && typeof category === 'object' ? category.slug : null
+  const categorySlug =
+    categoryValue && typeof categoryValue === 'object' && !Array.isArray(categoryValue)
+      ? (categoryValue as { slug?: string }).slug
+      : null
 
-    if (!slug || !categorySlug) return null
+  if (!slug || !categorySlug) return null
 
-    const url = `https://www.dailyinsight.co.uk/${categorySlug}/${slug}`
+  const url = `https://www.dailyinsight.co.uk/${categorySlug}/${slug}`
 
-    return (
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          display: 'inline-block',
-          background: 'white',
-          border: '1px solid #C8102E',
-          color: '#C8102E',
-          padding: '8px 16px',
-          borderRadius: '6px',
-          textDecoration: 'none',
-          fontWeight: 'bold',
-          fontSize: '13px',
-        }}
-      >
-        View on Site ↗
-      </a>
-    )
-  } catch {
-    return null
-  }
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: 'inline-block',
+        background: 'white',
+        border: '1px solid #C8102E',
+        color: '#C8102E',
+        padding: '8px 16px',
+        borderRadius: '6px',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        fontSize: '13px',
+      }}
+    >
+      View on Site ↗
+    </a>
+  )
 }
