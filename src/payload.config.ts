@@ -23,6 +23,7 @@ export default buildConfig({
     },
     meta: {
       titleSuffix: '- Daily Insight CMS',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon-cms.svg' }],
     },
   },
   routes: {
