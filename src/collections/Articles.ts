@@ -171,5 +171,20 @@ export const Articles: CollectionConfig = {
       name: 'readingTime',
       type: 'number',
     },
+    {
+      name: 'featured',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Pin this article to the top of the homepage',
+      },
+    },
+    {
+      name: 'displayOrder',
+      type: 'number',
+      admin: {
+        description: 'Lower numbers appear first. Leave blank for default ordering.',
+      },
+    },
   ],
 }
