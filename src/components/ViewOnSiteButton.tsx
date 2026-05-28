@@ -1,14 +1,8 @@
-'use client'
-
-import { useDocumentInfo } from '@payloadcms/ui'
-
-export function ViewOnSiteButton() {
-  const { initialData, savedDocumentData } = useDocumentInfo()
-  const doc = (savedDocumentData || initialData) as Record<string, any> | undefined
-
-  const slug = doc?.slug as string | undefined
-  const category = doc?.category as { slug?: string } | null | undefined
-  const categorySlug = category && typeof category === 'object' ? category.slug : null
+export function ViewOnSiteButton({ data }: { data?: Record<string, any> }) {
+  const slug = data?.slug as string | undefined
+  const category = data?.category
+  const categorySlug =
+    category && typeof category === 'object' ? (category as { slug?: string }).slug : undefined
 
   if (!slug || !categorySlug) return null
 
