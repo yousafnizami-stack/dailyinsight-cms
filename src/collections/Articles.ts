@@ -18,6 +18,15 @@ export const Articles: CollectionConfig = {
   },
   fields: [
     {
+      name: 'viewOnSite',
+      type: 'ui',
+      admin: {
+        components: {
+          Field: '@/components/ViewOnSiteButton#ViewOnSiteButton',
+        },
+      },
+    },
+    {
       name: 'title',
       type: 'text',
       required: true,
