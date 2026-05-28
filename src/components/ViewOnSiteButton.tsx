@@ -1,41 +1,45 @@
-'use client'
-import { useFormFields } from '@payloadcms/ui'
+import type { BeforeDocumentControlsServerProps } from 'payload'
 
-export function ViewOnSiteButton() {
-  const slug = useFormFields(([fields]) => fields['slug']?.value as string | undefined)
-  const category = useFormFields(([fields]) => fields['category']?.value)
+export async function ViewOnSiteButton({ id, payload }: BeforeDocumentControlsServerProps) {
+  if (!id || !payload) return null
 
-  const categorySlug =
-    category && typeof category === 'object' && !Array.isArray(category)
-      ? (category as { slug?: string }).slug
-      : null
+  try {
+    const doc = await payload.findByID({
+      collection: 'articles',
+      id,
+      depth: 1,
+      overrideAccess: true,
+    })
 
-  if (!slug || !categorySlug) return null
+    const slug = doc?.slug as string | undefined
+    const category = doc?.category as { slug?: string } | string | null | undefined
+    const categorySlug = category && typeof category === 'object' ? category.slug : null
 
-  const url = `https://www.dailyinsight.co.uk/${categorySlug}/${slug}`
+    if (!slug || !categorySlug) return null
 
-  return (
-    <div style={{ marginBottom: '1.5rem' }}>
+    const url = `https://www.dailyinsight.co.uk/${categorySlug}/${slug}`
+
+    return (
       <a
         href={url}
         target="_blank"
         rel="noopener noreferrer"
         style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          backgroundColor: '#C8102E',
-          color: 'white',
+          display: 'inline-block',
+          background: 'white',
+          border: '1px solid #C8102E',
+          color: '#C8102E',
           padding: '8px 16px',
-          borderRadius: '4px',
+          borderRadius: '6px',
           textDecoration: 'none',
+          fontWeight: 'bold',
           fontSize: '13px',
-          fontWeight: '600',
-          letterSpacing: '0.025em',
         }}
       >
         View on Site ↗
       </a>
-    </div>
-  )
+    )
+  } catch {
+    return null
+  }
 }
