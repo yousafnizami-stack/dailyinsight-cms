@@ -153,7 +153,7 @@ export const Articles: CollectionConfig = {
       type: 'array',
       fields: [
         {
-          name: 'headline',
+          name: 'variant',
           type: 'text',
         },
       ],
