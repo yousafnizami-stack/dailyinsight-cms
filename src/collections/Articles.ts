@@ -15,17 +15,13 @@ export const Articles: CollectionConfig = {
       defaultLimit: 50,
       limits: [10, 25, 50, 100],
     },
-  },
-  fields: [
-    {
-      name: 'viewOnSite',
-      type: 'ui',
-      admin: {
-        components: {
-          Field: '@/components/ViewOnSiteButton#ViewOnSiteButton',
-        },
+    components: {
+      edit: {
+        beforeDocumentControls: ['@/components/ViewOnSiteButton#ViewOnSiteButton'],
       },
     },
+  },
+  fields: [
     {
       name: 'title',
       type: 'text',
