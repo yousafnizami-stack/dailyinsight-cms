@@ -1,5 +1,5 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { lexicalEditor, UploadFeature } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -31,7 +31,18 @@ export default buildConfig({
   },
   cookiePrefix: 'dailyinsight',
   collections: [Users, Media, Articles, Categories, Authors],
-  editor: lexicalEditor(),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
+      UploadFeature({
+        collections: {
+          media: {
+            fields: [],
+          },
+        },
+      }),
+    ],
+  }),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
