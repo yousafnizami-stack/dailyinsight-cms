@@ -23,7 +23,7 @@ export const Articles: CollectionConfig = {
   hooks: {
     beforeChange: [
       ({ data, originalDoc }) => {
-        if (data.status === 'published' && originalDoc?.status !== 'published') {
+        if (data.status === 'published' && !originalDoc?.publishedAt) {
           data.publishedAt = new Date().toISOString()
         }
         return data
