@@ -34,7 +34,7 @@ export const Articles: CollectionConfig = {
             where: {
               and: [
                 { featured: { equals: true } },
-                { id: { not_equals: args.id } },
+                { id: { not_equals: originalDoc?.id } },
               ],
             },
             data: { featured: false },
