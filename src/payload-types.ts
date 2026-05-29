@@ -191,10 +191,15 @@ export interface Media {
 export interface Article {
   id: number;
   title: string;
-  slug: string;
   status: 'draft' | 'published';
-  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
   category?: (number | null) | Category;
+  sourceUrls?:
+    | {
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage?: (number | null) | Media;
   body?: {
     root: {
       type: string;
@@ -211,17 +216,6 @@ export interface Article {
     [k: string]: unknown;
   } | null;
   excerpt?: string | null;
-  featuredImage?: (number | null) | Media;
-  featuredImageAlt?: string | null;
-  featuredImageUrl?: string | null;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  tags?:
-    | {
-        tag?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   embeds?:
     | {
         platform?: string | null;
@@ -231,16 +225,25 @@ export interface Article {
         id?: string | null;
       }[]
     | null;
-  publishedAt?: string | null;
-  publishedDate?: string | null;
-  confidence?: number | null;
   reviewNote?: string | null;
-  sourceUrls?:
+  /**
+   * Pin this article to the top of the homepage
+   */
+  featured?: boolean | null;
+  slug: string;
+  featuredImageUrl?: string | null;
+  featuredImageAlt?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  tags?:
     | {
-        url?: string | null;
+        tag?: string | null;
         id?: string | null;
       }[]
     | null;
+  publishedAt?: string | null;
+  publishedDate?: string | null;
+  confidence?: number | null;
   headlineVariants?:
     | {
         variant?: string | null;
@@ -248,6 +251,11 @@ export interface Article {
       }[]
     | null;
   readingTime?: number | null;
+  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
+  /**
+   * Lower numbers appear first. Leave blank for default ordering.
+   */
+  displayOrder?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -416,23 +424,17 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface ArticlesSelect<T extends boolean = true> {
   title?: T;
-  slug?: T;
   status?: T;
-  articleType?: T;
   category?: T;
-  body?: T;
-  excerpt?: T;
-  featuredImage?: T;
-  featuredImageAlt?: T;
-  featuredImageUrl?: T;
-  metaTitle?: T;
-  metaDescription?: T;
-  tags?:
+  sourceUrls?:
     | T
     | {
-        tag?: T;
+        url?: T;
         id?: T;
       };
+  featuredImage?: T;
+  body?: T;
+  excerpt?: T;
   embeds?:
     | T
     | {
@@ -442,16 +444,22 @@ export interface ArticlesSelect<T extends boolean = true> {
         insertAfterParagraph?: T;
         id?: T;
       };
+  reviewNote?: T;
+  featured?: T;
+  slug?: T;
+  featuredImageUrl?: T;
+  featuredImageAlt?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
   publishedAt?: T;
   publishedDate?: T;
   confidence?: T;
-  reviewNote?: T;
-  sourceUrls?:
-    | T
-    | {
-        url?: T;
-        id?: T;
-      };
   headlineVariants?:
     | T
     | {
@@ -459,6 +467,8 @@ export interface ArticlesSelect<T extends boolean = true> {
         id?: T;
       };
   readingTime?: T;
+  articleType?: T;
+  displayOrder?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -37,7 +37,7 @@ export const Articles: CollectionConfig = {
                 { id: { not_equals: originalDoc?.id } },
               ],
             },
-            data: { featured: false },
+            data: { featured: false } as any,
           })
         }
         return data
