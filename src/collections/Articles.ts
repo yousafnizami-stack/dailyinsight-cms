@@ -54,7 +54,17 @@ export const Articles: CollectionConfig = {
     {
       name: 'sourceUrls',
       type: 'array',
-      fields: [{ name: 'url', type: 'text' }],
+      fields: [
+        {
+          name: 'url',
+          type: 'text',
+          admin: {
+            components: {
+              afterInput: ['@/components/SourceUrlField#SourceUrlField'],
+            },
+          },
+        },
+      ],
     },
     {
       name: 'featuredImage',
