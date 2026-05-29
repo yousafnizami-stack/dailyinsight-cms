@@ -60,7 +60,7 @@ export const Articles: CollectionConfig = {
           type: 'text',
           admin: {
             components: {
-              afterInput: ['@/components/SourceUrlField#SourceUrlField'],
+              beforeInput: ['@/components/SourceUrlField#SourceUrlField'],
             },
           },
         },
