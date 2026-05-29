@@ -22,9 +22,23 @@ export const Articles: CollectionConfig = {
   },
   hooks: {
     beforeChange: [
-      ({ data, originalDoc }) => {
+      async (args) => {
+        const { data, originalDoc } = args
         if (data.status === 'published' && originalDoc?.status !== 'published') {
           data.publishedAt = new Date().toISOString()
+        }
+        if (data.featured === true) {
+          const { req } = args
+          await req.payload.update({
+            collection: 'articles',
+            where: {
+              and: [
+                { featured: { equals: true } },
+                { id: { not_equals: args.id } },
+              ],
+            },
+            data: { featured: false },
+          })
         }
         return data
       },
