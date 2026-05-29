@@ -1,186 +1,85 @@
-import type { CollectionConfig } from 'payload'
+import { CollectionConfig } from 'payload'
 
-export const Articles: CollectionConfig = {
+const Articles: CollectionConfig = {
   slug: 'articles',
+  admin: {
+    defaultColumns: ['title', 'category', 'status', 'confidence', 'createdAt'],
+    useAsTitle: 'title',
+  },
   access: {
     create: ({ req: { user } }) => Boolean(user),
     read: () => true,
     update: ({ req: { user } }) => Boolean(user),
     delete: ({ req: { user } }) => Boolean(user),
   },
-  admin: {
-    useAsTitle: 'title',
-    defaultColumns: ['title', 'status', 'category', 'publishedAt'],
-    pagination: {
-      defaultLimit: 50,
-      limits: [10, 25, 50, 100],
-    },
-    components: {
-      edit: {
-        beforeDocumentControls: ['@/components/ViewOnSiteButton#ViewOnSiteButton'],
-      },
-    },
-  },
   fields: [
-    {
-      name: 'title',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'slug',
-      type: 'text',
-      unique: true,
-      index: true,
-      required: true,
-    },
+    // --- Visible fields (in display order) ---
+    { name: 'title', type: 'text', required: true },
     {
       name: 'status',
       type: 'select',
-      options: [
-        { label: 'Draft', value: 'draft' },
-        { label: 'Published', value: 'published' },
-      ],
+      options: ['draft', 'published'],
       defaultValue: 'draft',
       required: true,
-    },
-    {
-      name: 'articleType',
-      type: 'select',
-      options: [
-        { label: 'News', value: 'news' },
-        { label: 'Listicle', value: 'listicle' },
-        { label: 'Profile', value: 'profile' },
-        { label: 'Explainer', value: 'explainer' },
-        { label: 'Timeline', value: 'timeline' },
-        { label: 'Developing', value: 'developing' },
-      ],
     },
     {
       name: 'category',
       type: 'relationship',
       relationTo: 'categories',
-    },
-    {
-      name: 'body',
-      type: 'richText',
-    },
-    {
-      name: 'excerpt',
-      type: 'textarea',
-    },
-    {
-      name: 'featuredImage',
-      type: 'upload',
-      relationTo: 'media',
-    },
-    {
-      name: 'featuredImageAlt',
-      type: 'text',
-    },
-    {
-      name: 'featuredImageUrl',
-      type: 'text',
-      admin: {
-        components: {
-          afterInput: ['@/components/FeaturedImagePreview#FeaturedImagePreview'],
-        },
-      },
-    },
-    {
-      name: 'metaTitle',
-      type: 'text',
-    },
-    {
-      name: 'metaDescription',
-      type: 'text',
-    },
-    {
-      name: 'tags',
-      type: 'array',
-      fields: [
-        {
-          name: 'tag',
-          type: 'text',
-        },
-      ],
-    },
-    {
-      name: 'embeds',
-      type: 'array',
-      fields: [
-        {
-          name: 'platform',
-          type: 'text',
-        },
-        {
-          name: 'embedHtml',
-          type: 'textarea',
-        },
-        {
-          name: 'caption',
-          type: 'text',
-        },
-        {
-          name: 'insertAfterParagraph',
-          type: 'number',
-        },
-      ],
-    },
-    {
-      name: 'publishedAt',
-      type: 'date',
-    },
-    {
-      name: 'publishedDate',
-      type: 'date',
-    },
-    {
-      name: 'confidence',
-      type: 'number',
-    },
-    {
-      name: 'reviewNote',
-      type: 'textarea',
+      required: true,
     },
     {
       name: 'sourceUrls',
       type: 'array',
+      fields: [{ name: 'url', type: 'text' }],
+      admin: { description: 'Internal only — never displayed on frontend' },
+    },
+    { name: 'featuredImage', type: 'upload', relationTo: 'media' },
+    { name: 'body', type: 'richText' },
+    { name: 'excerpt', type: 'textarea' },
+    {
+      name: 'embeds',
+      type: 'array',
       fields: [
-        {
-          name: 'url',
-          type: 'text',
-        },
+        { name: 'platform', type: 'text' },
+        { name: 'embedHtml', type: 'textarea' },
+        { name: 'caption', type: 'text' },
+        { name: 'insertAfterParagraph', type: 'number' },
       ],
     },
+    { name: 'reviewNote', type: 'textarea' },
+    { name: 'featured', type: 'checkbox', defaultValue: false },
+
+    // --- Hidden fields ---
+    { name: 'slug', type: 'text', required: true, unique: true, admin: { hidden: true } },
+    { name: 'featuredImageUrl', type: 'text', admin: { hidden: true } },
+    { name: 'featuredImageAlt', type: 'text', admin: { hidden: true } },
+    { name: 'metaTitle', type: 'text', admin: { hidden: true } },
+    { name: 'metaDescription', type: 'text', admin: { hidden: true } },
+    {
+      name: 'tags',
+      type: 'array',
+      fields: [{ name: 'tag', type: 'text' }],
+      admin: { hidden: true },
+    },
+    { name: 'publishedAt', type: 'date', admin: { hidden: true } },
+    { name: 'confidence', type: 'number', admin: { hidden: true } },
     {
       name: 'headlineVariants',
       type: 'array',
-      fields: [
-        {
-          name: 'variant',
-          type: 'text',
-        },
-      ],
+      fields: [{ name: 'headline', type: 'text' }],
+      admin: { hidden: true },
     },
+    { name: 'readingTime', type: 'number', admin: { hidden: true } },
     {
-      name: 'readingTime',
-      type: 'number',
+      name: 'articleType',
+      type: 'select',
+      options: ['news', 'listicle', 'profile', 'explainer', 'timeline', 'developing'],
+      admin: { hidden: true },
     },
-    {
-      name: 'featured',
-      type: 'checkbox',
-      defaultValue: false,
-      admin: {
-        description: 'Pin this article to the top of the homepage',
-      },
-    },
-    {
-      name: 'displayOrder',
-      type: 'number',
-      admin: {
-        description: 'Lower numbers appear first. Leave blank for default ordering.',
-      },
-    },
+    { name: 'publishedDate', type: 'date', admin: { hidden: true } },
+    { name: 'displayOrder', type: 'number', admin: { hidden: true } },
   ],
 }
+
+export { Articles }
