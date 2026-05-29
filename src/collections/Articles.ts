@@ -20,6 +20,16 @@ export const Articles: CollectionConfig = {
       },
     },
   },
+  hooks: {
+    beforeChange: [
+      ({ data, originalDoc }) => {
+        if (data.status === 'published' && originalDoc?.status !== 'published') {
+          data.publishedAt = new Date().toISOString()
+        }
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: 'title',
