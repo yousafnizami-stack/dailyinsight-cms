@@ -201,14 +201,5 @@ export const Articles: CollectionConfig = {
         description: 'Lower numbers appear first. Leave blank for default ordering.',
       },
     },
-    {
-      name: 'pipelineSource',
-      type: 'select',
-      options: [
-        { label: 'RSS', value: 'rss' },
-        { label: 'Keyword', value: 'keyword' },
-      ],
-      admin: { hidden: true },
-    },
   ],
 }
