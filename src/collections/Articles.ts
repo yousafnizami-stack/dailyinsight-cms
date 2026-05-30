@@ -66,6 +66,19 @@ export const Articles: CollectionConfig = {
       relationTo: 'categories',
     },
     {
+      name: 'author',
+      type: 'select',
+      options: [
+        { label: 'DI Royal Reporter', value: 'DI Royal Reporter' },
+        { label: 'DI Entertainment Desk', value: 'DI Entertainment Desk' },
+        { label: 'DI Music Desk', value: 'DI Music Desk' },
+        { label: 'DI Film Desk', value: 'DI Film Desk' },
+        { label: 'Web Desk', value: 'Web Desk' },
+        { label: 'News Desk', value: 'News Desk' },
+      ],
+      admin: { description: 'Byline shown on article page' },
+    },
+    {
       name: 'sourceUrls',
       type: 'array',
       fields: [
@@ -115,7 +128,6 @@ export const Articles: CollectionConfig = {
         description: 'Pin this article to the top of the homepage',
       },
     },
-    { name: 'author', type: 'text', admin: { description: 'Byline shown on article page e.g. DI Royal Reporter, Web Desk' } },
     {
       name: 'slug',
       type: 'text',
