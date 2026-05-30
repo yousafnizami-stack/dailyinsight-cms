@@ -230,6 +230,10 @@ export interface Article {
    * Pin this article to the top of the homepage
    */
   featured?: boolean | null;
+  /**
+   * Byline shown on article page e.g. DI Royal Reporter, Web Desk
+   */
+  author?: string | null;
   slug: string;
   featuredImageUrl?: string | null;
   featuredImageAlt?: string | null;
@@ -446,6 +450,7 @@ export interface ArticlesSelect<T extends boolean = true> {
       };
   reviewNote?: T;
   featured?: T;
+  author?: T;
   slug?: T;
   featuredImageUrl?: T;
   featuredImageAlt?: T;
