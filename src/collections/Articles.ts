@@ -115,6 +115,7 @@ export const Articles: CollectionConfig = {
         description: 'Pin this article to the top of the homepage',
       },
     },
+    { name: 'author', type: 'text', admin: { description: 'Byline shown on article page e.g. DI Royal Reporter, Web Desk' } },
     {
       name: 'slug',
       type: 'text',
