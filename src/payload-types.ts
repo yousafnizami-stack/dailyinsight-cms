@@ -264,6 +264,15 @@ export interface Article {
    * Lower numbers appear first. Leave blank for default ordering.
    */
   displayOrder?: number | null;
+  imageOptions?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -357,6 +366,15 @@ export interface TestArticle {
    * Lower numbers appear first. Leave blank for default ordering.
    */
   displayOrder?: number | null;
+  imageOptions?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -563,6 +581,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   readingTime?: T;
   articleType?: T;
   displayOrder?: T;
+  imageOptions?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -618,6 +637,7 @@ export interface TestArticlesSelect<T extends boolean = true> {
   readingTime?: T;
   articleType?: T;
   displayOrder?: T;
+  imageOptions?: T;
   updatedAt?: T;
   createdAt?: T;
 }

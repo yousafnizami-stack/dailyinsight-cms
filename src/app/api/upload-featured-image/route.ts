@@ -14,11 +14,18 @@ export async function POST(req: NextRequest) {
     const { imageUrl, filename, articleId, collection } = await req.json()
     const payload = await getPayload({ config })
 
-    const uploadResult = await cloudinary.uploader.upload(imageUrl, {
-      public_id: `dailyinsight/${filename}`,
-      overwrite: false,
-      resource_type: 'image',
-    })
+    let uploadResult: any
+    try {
+      uploadResult = await cloudinary.uploader.upload(imageUrl, {
+        public_id: `dailyinsight/${filename}`,
+        overwrite: false,
+        resource_type: 'image',
+      })
+      console.log('Cloudinary upload success:', uploadResult.secure_url)
+    } catch (err) {
+      console.error('Cloudinary upload error:', err)
+      return NextResponse.json({ error: String(err) }, { status: 500 })
+    }
 
     const mediaRecord = await payload.create({
       collection: 'media',
