@@ -9,6 +9,7 @@ import { cloudinaryStorage } from 'payload-storage-cloudinary'
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Articles } from './collections/Articles'
+import { TestArticles } from './collections/TestArticles'
 import { Categories } from './collections/Categories'
 import { Authors } from './collections/Authors'
 
@@ -30,7 +31,7 @@ export default buildConfig({
     admin: '/admin',
   },
   cookiePrefix: 'dailyinsight',
-  collections: [Users, Media, Articles, Categories, Authors],
+  collections: [Users, Media, Articles, TestArticles, Categories, Authors],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
