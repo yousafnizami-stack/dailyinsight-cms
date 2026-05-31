@@ -21,6 +21,21 @@ export const Articles: CollectionConfig = {
     },
   },
   hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        try {
+          const slug = doc.slug
+          const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : null
+          if (slug && categorySlug) {
+            await fetch(
+              `${process.env.NEXT_PUBLIC_SITE_URL}/api/revalidate?path=/${categorySlug}/${slug}&secret=${process.env.REVALIDATE_SECRET}`,
+            )
+          }
+        } catch (err) {
+          console.error('Revalidation failed:', err)
+        }
+      },
+    ],
     beforeChange: [
       async (args) => {
         const { data, originalDoc } = args
