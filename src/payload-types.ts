@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     articles: Article;
+    'test-articles': TestArticle;
     categories: Category;
     authors: Author;
     'payload-kv': PayloadKv;
@@ -82,6 +83,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    'test-articles': TestArticlesSelect<false> | TestArticlesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     authors: AuthorsSelect<false> | AuthorsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -193,6 +195,12 @@ export interface Article {
   title: string;
   status: 'draft' | 'published';
   category?: (number | null) | Category;
+  /**
+   * Byline shown on article page
+   */
+  author?:
+    | ('DI Royal Reporter' | 'DI Entertainment Desk' | 'DI Music Desk' | 'DI Film Desk' | 'Web Desk' | 'News Desk')
+    | null;
   sourceUrls?:
     | {
         url?: string | null;
@@ -230,10 +238,6 @@ export interface Article {
    * Pin this article to the top of the homepage
    */
   featured?: boolean | null;
-  /**
-   * Byline shown on article page e.g. DI Royal Reporter, Web Desk
-   */
-  author?: string | null;
   slug: string;
   featuredImageUrl?: string | null;
   featuredImageAlt?: string | null;
@@ -272,6 +276,87 @@ export interface Category {
   name: string;
   slug: string;
   description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "test-articles".
+ */
+export interface TestArticle {
+  id: number;
+  title: string;
+  status: 'draft' | 'published';
+  category?: (number | null) | Category;
+  /**
+   * Byline shown on article page
+   */
+  author?:
+    | ('DI Royal Reporter' | 'DI Entertainment Desk' | 'DI Music Desk' | 'DI Film Desk' | 'Web Desk' | 'News Desk')
+    | null;
+  sourceUrls?:
+    | {
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  excerpt?: string | null;
+  embeds?:
+    | {
+        platform?: string | null;
+        embedHtml?: string | null;
+        caption?: string | null;
+        insertAfterParagraph?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  reviewNote?: string | null;
+  /**
+   * Pin this article to the top of the homepage
+   */
+  featured?: boolean | null;
+  slug: string;
+  featuredImageUrl?: string | null;
+  featuredImageAlt?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  publishedAt?: string | null;
+  publishedDate?: string | null;
+  confidence?: number | null;
+  headlineVariants?:
+    | {
+        variant?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  readingTime?: number | null;
+  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
+  /**
+   * Lower numbers appear first. Leave blank for default ordering.
+   */
+  displayOrder?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -323,6 +408,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'articles';
         value: number | Article;
+      } | null)
+    | ({
+        relationTo: 'test-articles';
+        value: number | TestArticle;
       } | null)
     | ({
         relationTo: 'categories';
@@ -430,6 +519,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   title?: T;
   status?: T;
   category?: T;
+  author?: T;
   sourceUrls?:
     | T
     | {
@@ -450,7 +540,61 @@ export interface ArticlesSelect<T extends boolean = true> {
       };
   reviewNote?: T;
   featured?: T;
+  slug?: T;
+  featuredImageUrl?: T;
+  featuredImageAlt?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  publishedAt?: T;
+  publishedDate?: T;
+  confidence?: T;
+  headlineVariants?:
+    | T
+    | {
+        variant?: T;
+        id?: T;
+      };
+  readingTime?: T;
+  articleType?: T;
+  displayOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "test-articles_select".
+ */
+export interface TestArticlesSelect<T extends boolean = true> {
+  title?: T;
+  status?: T;
+  category?: T;
   author?: T;
+  sourceUrls?:
+    | T
+    | {
+        url?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  body?: T;
+  excerpt?: T;
+  embeds?:
+    | T
+    | {
+        platform?: T;
+        embedHtml?: T;
+        caption?: T;
+        insertAfterParagraph?: T;
+        id?: T;
+      };
+  reviewNote?: T;
+  featured?: T;
   slug?: T;
   featuredImageUrl?: T;
   featuredImageAlt?: T;
