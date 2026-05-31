@@ -33,7 +33,7 @@ export function ImagePicker() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Upload failed')
       setDone(true)
-      window.location.reload()
+      setTimeout(() => window.location.reload(), 1500)
     } catch (e: any) {
       setError(e.message)
     } finally {
