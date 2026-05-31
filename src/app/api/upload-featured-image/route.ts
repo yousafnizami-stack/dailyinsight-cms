@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       collection: collectionSlug as any,
       id: Number(articleId),
       data: {
-        featuredImage: null,
+        featuredImage: mediaRecord.id,
         featuredImageUrl: uploadResult.secure_url,
         featuredImageAlt: filename.replace(/-/g, ' '),
         imageOptions: [],
