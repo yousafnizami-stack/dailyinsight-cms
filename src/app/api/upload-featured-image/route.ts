@@ -48,6 +48,30 @@ export async function POST(req: NextRequest) {
     })
     console.log('Article updated with featuredImageUrl')
 
+    // Also create media record and link to featuredImage relationship
+    const mediaRecord = await payload.create({
+      collection: 'media',
+      data: {
+        alt: filename.replace(/-/g, ' '),
+        cloudinaryUrl: uploadResult.secure_url,
+        cloudinaryPublicId: uploadResult.public_id,
+        cloudinaryResourceType: 'image',
+        cloudinaryFormat: uploadResult.format,
+        cloudinaryVersion: Number(uploadResult.version),
+        url: uploadResult.secure_url,
+        width: uploadResult.width,
+        height: uploadResult.height,
+      } as any,
+    })
+
+    await payload.update({
+      collection: collectionSlug as any,
+      id: Number(articleId),
+      data: {
+        featuredImage: mediaRecord.id,
+      } as any,
+    })
+
     return NextResponse.json({ success: true, url: uploadResult.secure_url })
   } catch (error: any) {
     console.error('Upload route error:', error?.message || error)
