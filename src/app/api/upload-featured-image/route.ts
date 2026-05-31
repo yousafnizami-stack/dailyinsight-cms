@@ -47,9 +47,13 @@ export async function POST(req: NextRequest) {
         cloudinaryUrl: uploadResult.secure_url,
         cloudinaryResourceType: uploadResult.resource_type,
         cloudinaryFormat: uploadResult.format,
-        cloudinaryVersion: uploadResult.version,
+        cloudinaryVersion: Number(uploadResult.version),
         url: uploadResult.secure_url,
-      },
+        filename: filename + '.' + uploadResult.format,
+        mimeType: 'image/' + uploadResult.format,
+        width: uploadResult.width,
+        height: uploadResult.height,
+      } as any,
     })
 
     await payload.update({
