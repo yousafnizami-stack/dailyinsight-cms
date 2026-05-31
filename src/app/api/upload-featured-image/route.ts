@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { v2 as cloudinary } from 'cloudinary'
+import { sql } from 'drizzle-orm'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -37,15 +38,29 @@ export async function POST(req: NextRequest) {
     console.log('Cloudinary upload success:', uploadResult.secure_url)
 
     const collectionSlug = collection || 'articles'
+
+    // Insert media record directly via SQL
+    const { db } = payload
+    await db.execute(sql`
+      INSERT INTO media (alt, cloudinary_url, cloudinary_public_id, cloudinary_resource_type, cloudinary_format, cloudinary_version, url, width, height, updated_at, created_at)
+      VALUES (${filename.replace(/-/g, ' ')}, ${uploadResult.secure_url}, ${uploadResult.public_id}, ${'image'}, ${uploadResult.format}, ${uploadResult.version}, ${uploadResult.secure_url}, ${uploadResult.width}, ${uploadResult.height}, NOW(), NOW())
+      RETURNING id
+    `)
+
+    const mediaRows = await db.execute(sql`SELECT id FROM media WHERE cloudinary_public_id = ${uploadResult.public_id} LIMIT 1`)
+    const mediaId = mediaRows.rows[0].id
+
     await payload.update({
       collection: collectionSlug as any,
       id: Number(articleId),
       data: {
+        featuredImage: mediaId,
         featuredImageUrl: uploadResult.secure_url,
         featuredImageAlt: filename.replace(/-/g, ' '),
+        imageOptions: [],
       } as any,
     })
-    console.log('Article updated with featuredImageUrl')
+    console.log('Article updated with featuredImage mediaId:', mediaId)
 
     return NextResponse.json({ success: true, url: uploadResult.secure_url })
   } catch (error: any) {
