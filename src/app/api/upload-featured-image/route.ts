@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { v2 as cloudinary } from 'cloudinary'
-import { sql } from 'drizzle-orm'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -17,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     const payload = await getPayload({ config })
 
-    // Step 1: Fetch image as buffer
+    // Fetch image as buffer
     const imageResponse = await fetch(imageUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -25,11 +24,13 @@ export async function POST(req: NextRequest) {
       }
     })
     if (!imageResponse.ok) throw new Error(`Failed to fetch image: ${imageResponse.status}`)
-    const imageBuffer = await imageResponse.arrayBuffer()
-    const base64Image = `data:${imageResponse.headers.get('content-type') || 'image/jpeg'};base64,${Buffer.from(imageBuffer).toString('base64')}`
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer())
+    const contentType = imageResponse.headers.get('content-type') || 'image/jpeg'
+    const ext = contentType.split('/')[1]?.split(';')[0] || 'jpg'
     console.log('Image fetched, size:', imageBuffer.byteLength)
 
-    // Step 2: Upload to Cloudinary
+    // Upload to Cloudinary
+    const base64Image = `data:${contentType};base64,${imageBuffer.toString('base64')}`
     const uploadResult = await cloudinary.uploader.upload(base64Image, {
       public_id: `dailyinsight/${filename}`,
       overwrite: true,
@@ -37,30 +38,42 @@ export async function POST(req: NextRequest) {
     })
     console.log('Cloudinary upload success:', uploadResult.secure_url)
 
+    // Create media record using Payload's local API with file data
+    const mediaRecord = await payload.create({
+      collection: 'media',
+      data: {
+        alt: filename.replace(/-/g, ' '),
+        cloudinaryUrl: uploadResult.secure_url,
+        cloudinaryPublicId: uploadResult.public_id,
+        cloudinaryResourceType: 'image',
+        cloudinaryFormat: ext,
+        cloudinaryVersion: Number(uploadResult.version),
+        url: uploadResult.secure_url,
+        width: uploadResult.width,
+        height: uploadResult.height,
+      } as any,
+      file: {
+        data: imageBuffer,
+        mimetype: contentType,
+        name: `${filename}.${ext}`,
+        size: imageBuffer.byteLength,
+      },
+    })
+    console.log('Media record created:', mediaRecord.id)
+
+    // Update article
     const collectionSlug = collection || 'articles'
-
-    // Insert media record directly via SQL
-    const { db } = payload
-    await db.execute(sql`
-      INSERT INTO media (alt, cloudinary_url, cloudinary_public_id, cloudinary_resource_type, cloudinary_format, cloudinary_version, url, width, height, updated_at, created_at)
-      VALUES (${filename.replace(/-/g, ' ')}, ${uploadResult.secure_url}, ${uploadResult.public_id}, ${'image'}, ${uploadResult.format}, ${uploadResult.version}, ${uploadResult.secure_url}, ${uploadResult.width}, ${uploadResult.height}, NOW(), NOW())
-      RETURNING id
-    `)
-
-    const mediaRows = await db.execute(sql`SELECT id FROM media WHERE cloudinary_public_id = ${uploadResult.public_id} LIMIT 1`)
-    const mediaId = mediaRows.rows[0].id
-
     await payload.update({
       collection: collectionSlug as any,
       id: Number(articleId),
       data: {
-        featuredImage: mediaId,
+        featuredImage: mediaRecord.id,
         featuredImageUrl: uploadResult.secure_url,
         featuredImageAlt: filename.replace(/-/g, ' '),
         imageOptions: [],
       } as any,
     })
-    console.log('Article updated with featuredImage mediaId:', mediaId)
+    console.log('Article updated successfully')
 
     return NextResponse.json({ success: true, url: uploadResult.secure_url })
   } catch (error: any) {
