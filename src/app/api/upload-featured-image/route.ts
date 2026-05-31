@@ -16,7 +16,19 @@ export async function POST(req: NextRequest) {
 
     let uploadResult: any
     try {
-      uploadResult = await cloudinary.uploader.upload(imageUrl, {
+      const imageResponse = await fetch(imageUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Referer': new URL(imageUrl).origin,
+        }
+      })
+
+      if (!imageResponse.ok) throw new Error(`Failed to fetch image: ${imageResponse.status}`)
+
+      const imageBuffer = await imageResponse.arrayBuffer()
+      const base64Image = `data:${imageResponse.headers.get('content-type') || 'image/jpeg'};base64,${Buffer.from(imageBuffer).toString('base64')}`
+
+      uploadResult = await cloudinary.uploader.upload(base64Image, {
         public_id: `dailyinsight/${filename}`,
         overwrite: false,
         resource_type: 'image',
