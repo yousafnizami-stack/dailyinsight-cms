@@ -99,6 +99,15 @@ export const Articles: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'imagePicker',
+      type: 'ui',
+      admin: {
+        components: {
+          Field: '@/components/ImagePicker#ImagePicker',
+        },
+      },
+    },
+    {
       name: 'body',
       type: 'richText',
     },
@@ -214,5 +223,6 @@ export const Articles: CollectionConfig = {
         description: 'Lower numbers appear first. Leave blank for default ordering.',
       },
     },
+    { name: 'imageOptions', type: 'json', admin: { hidden: true } },
   ],
 }
