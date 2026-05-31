@@ -26,6 +26,11 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    await payload.delete({
+      collection: 'test-articles',
+      id,
+    })
+
     return NextResponse.json({ success: true, id: promoted.id })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
