@@ -12,6 +12,7 @@ cloudinary.config({
 export async function POST(req: NextRequest) {
   try {
     const { imageUrl, filename, articleId, collection } = await req.json()
+    console.log('Received collection:', collection, 'articleId:', articleId)
     const payload = await getPayload({ config })
 
     let uploadResult: any
@@ -53,6 +54,9 @@ export async function POST(req: NextRequest) {
         height: uploadResult.height,
       } as any,
     })
+
+    console.log('Media record created, id:', mediaRecord.id)
+    console.log('Updating article, collection:', collection, 'id:', articleId)
 
     await payload.update({
       collection: collection || 'articles',
