@@ -17,10 +17,7 @@ export const TestArticles: CollectionConfig = {
     },
     components: {
       edit: {
-        beforeDocumentControls: [
-          '@/components/ViewOnSiteButton#ViewOnSiteButton',
-          '@/components/PromoteToArticlesButton#PromoteToArticlesButton',
-        ],
+        beforeDocumentControls: ['@/components/PromoteToArticlesButton#PromoteToArticlesButton'],
       },
     },
   },
