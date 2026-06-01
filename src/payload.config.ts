@@ -32,7 +32,7 @@ export default buildConfig({
   routes: {
     admin: '/admin',
   },
-  serverURL: process.env.PAYLOAD_SERVER_URL || 'https://dailyinsight.co.uk',
+  serverURL: process.env.PAYLOAD_SERVER_URL || 'https://admin.dailyinsight.co.uk',
   cookiePrefix: 'di',
   csrf: ['https://dailyinsight.co.uk', 'https://admin.dailyinsight.co.uk'],
   collections: [Users, Media, Articles, TestArticles, Categories, Authors, UsedUrls, Keywords],
