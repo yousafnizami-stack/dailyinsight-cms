@@ -45,7 +45,6 @@ export const Articles: CollectionConfig = {
             const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
             const imageUrl = doc.featuredImageUrl || ''
 
-            await new Promise(resolve => setTimeout(resolve, 60000))
             await fetch(webhookUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -54,7 +53,8 @@ export const Articles: CollectionConfig = {
                 url: articleUrl,
                 excerpt: doc.excerpt || '',
                 category: categorySlug,
-                image: imageUrl,
+                image: doc.featuredImageUrl || '',
+                message: `${doc.title}\n\nRead more: ${articleUrl}`,
               })
             })
             console.log('Make.com webhook triggered for:', doc.title)
