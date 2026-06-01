@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     if (action === 'save') {
       const expiresAt = new Date()
-      expiresAt.setHours(expiresAt.getHours() + 12)
+      expiresAt.setHours(expiresAt.getHours() + 24)
 
       for (const url of urls) {
         try {
