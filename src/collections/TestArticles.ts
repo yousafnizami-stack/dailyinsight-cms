@@ -69,6 +69,10 @@ export const TestArticles: CollectionConfig = {
     {
       name: 'author',
       type: 'select',
+      required: false,
+      admin: {
+        description: 'Byline shown on article page',
+      },
       options: [
         { label: 'Royal Correspondent', value: 'di-royal-reporter' },
         { label: 'Entertainment Desk', value: 'di-entertainment-desk' },
@@ -78,7 +82,6 @@ export const TestArticles: CollectionConfig = {
         { label: 'News Desk', value: 'news-desk' },
         { label: 'Celebrity Desk', value: 'celebrity-desk' },
       ],
-      admin: { description: 'Byline shown on article page' },
     },
     {
       name: 'sourceUrls',
