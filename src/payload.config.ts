@@ -33,11 +33,6 @@ export default buildConfig({
   serverURL: process.env.PAYLOAD_SERVER_URL || 'https://dailyinsight.co.uk',
   cookiePrefix: 'di',
   csrf: ['https://dailyinsight.co.uk', 'https://admin.dailyinsight.co.uk'],
-  cookie: {
-    sameSite: 'lax',
-    secure: true,
-    domain: '.dailyinsight.co.uk',
-  },
   collections: [Users, Media, Articles, TestArticles, Categories, Authors],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
