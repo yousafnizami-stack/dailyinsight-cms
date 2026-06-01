@@ -30,7 +30,8 @@ export default buildConfig({
   routes: {
     admin: '/admin',
   },
-  cookiePrefix: 'dailyinsight',
+  serverURL: process.env.PAYLOAD_SERVER_URL || 'https://dailyinsight.co.uk',
+  cookiePrefix: 'di',
   collections: [Users, Media, Articles, TestArticles, Categories, Authors],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
