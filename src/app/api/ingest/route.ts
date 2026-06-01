@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     const featuredImageUrl = (body.featuredImage && typeof body.featuredImage === 'string') ? body.featuredImage : undefined
     const lexicalBody = body.body ? htmlToLexical(body.body) : undefined
 
-    const { category, featuredImage, body: bodyHtml, imageOptions, ...rest } = body
+    const { category, featuredImage, body: bodyHtml, imageOptions, author, ...rest } = body
     const article = await payload.create({
       collection: 'articles',
       data: {
@@ -70,6 +70,7 @@ export async function POST(req: NextRequest) {
         ...(featuredImageUrl !== undefined && { featuredImageUrl }),
         ...(lexicalBody !== undefined && { body: lexicalBody }),
         ...(imageOptions !== undefined && { imageOptions }),
+        ...(author !== undefined && { author }),
       },
       overrideAccess: true,
     })
