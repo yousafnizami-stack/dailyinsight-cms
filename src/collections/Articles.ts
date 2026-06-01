@@ -45,6 +45,7 @@ export const Articles: CollectionConfig = {
             const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
             const imageUrl = doc.featuredImageUrl || ''
 
+            await new Promise(resolve => setTimeout(resolve, 60000))
             await fetch(webhookUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
