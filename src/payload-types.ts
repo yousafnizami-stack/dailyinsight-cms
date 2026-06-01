@@ -74,6 +74,7 @@ export interface Config {
     categories: Category;
     authors: Author;
     'used-urls': UsedUrl;
+    keywords: Keyword;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     authors: AuthorsSelect<false> | AuthorsSelect<true>;
     'used-urls': UsedUrlsSelect<false> | UsedUrlsSelect<true>;
+    keywords: KeywordsSelect<false> | KeywordsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -407,6 +409,21 @@ export interface UsedUrl {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "keywords".
+ */
+export interface Keyword {
+  id: number;
+  keyword: string;
+  category: 'royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle';
+  /**
+   * Uncheck to temporarily disable this keyword without deleting it
+   */
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -456,6 +473,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'used-urls';
         value: number | UsedUrl;
+      } | null)
+    | ({
+        relationTo: 'keywords';
+        value: number | Keyword;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -690,6 +711,17 @@ export interface UsedUrlsSelect<T extends boolean = true> {
   url?: T;
   keyword?: T;
   expiresAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "keywords_select".
+ */
+export interface KeywordsSelect<T extends boolean = true> {
+  keyword?: T;
+  category?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }

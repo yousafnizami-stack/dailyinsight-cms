@@ -13,6 +13,7 @@ import { TestArticles } from './collections/TestArticles'
 import { Categories } from './collections/Categories'
 import { Authors } from './collections/Authors'
 import { UsedUrls } from './collections/UsedUrls'
+import { Keywords } from './collections/Keywords'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -34,7 +35,7 @@ export default buildConfig({
   serverURL: process.env.PAYLOAD_SERVER_URL || 'https://dailyinsight.co.uk',
   cookiePrefix: 'di',
   csrf: ['https://dailyinsight.co.uk', 'https://admin.dailyinsight.co.uk'],
-  collections: [Users, Media, Articles, TestArticles, Categories, Authors, UsedUrls],
+  collections: [Users, Media, Articles, TestArticles, Categories, Authors, UsedUrls, Keywords],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
