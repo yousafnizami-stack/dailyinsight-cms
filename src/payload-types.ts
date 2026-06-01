@@ -203,7 +203,15 @@ export interface Article {
    * Byline shown on article page
    */
   author?:
-    | ('DI Royal Reporter' | 'DI Entertainment Desk' | 'DI Music Desk' | 'DI Film Desk' | 'Web Desk' | 'News Desk')
+    | (
+        | 'di-royal-reporter'
+        | 'di-entertainment-desk'
+        | 'di-music-desk'
+        | 'di-film-desk'
+        | 'web-desk'
+        | 'news-desk'
+        | 'celebrity-desk'
+      )
     | null;
   sourceUrls?:
     | {
@@ -305,7 +313,15 @@ export interface TestArticle {
    * Byline shown on article page
    */
   author?:
-    | ('DI Royal Reporter' | 'DI Entertainment Desk' | 'DI Music Desk' | 'DI Film Desk' | 'Web Desk' | 'News Desk')
+    | (
+        | 'di-royal-reporter'
+        | 'di-entertainment-desk'
+        | 'di-music-desk'
+        | 'di-film-desk'
+        | 'web-desk'
+        | 'news-desk'
+        | 'celebrity-desk'
+      )
     | null;
   sourceUrls?:
     | {
