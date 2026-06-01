@@ -35,6 +35,33 @@ export const Articles: CollectionConfig = {
           console.error('Revalidation failed:', err)
         }
       },
+      async ({ doc, previousDoc }) => {
+        try {
+          if (doc.status === 'published' && previousDoc?.status !== 'published') {
+            const webhookUrl = process.env.MAKE_WEBHOOK_URL
+            if (!webhookUrl) return
+
+            const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : doc.category
+            const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
+            const imageUrl = doc.featuredImageUrl || ''
+
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: doc.title,
+                url: articleUrl,
+                excerpt: doc.excerpt || '',
+                category: categorySlug,
+                image: imageUrl,
+              })
+            })
+            console.log('Make.com webhook triggered for:', doc.title)
+          }
+        } catch (e) {
+          console.log('Make.com webhook failed:', e)
+        }
+      },
     ],
     beforeChange: [
       async (args) => {
