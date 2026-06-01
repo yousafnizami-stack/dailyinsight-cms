@@ -73,6 +73,7 @@ export interface Config {
     'test-articles': TestArticle;
     categories: Category;
     authors: Author;
+    'used-urls': UsedUrl;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     'test-articles': TestArticlesSelect<false> | TestArticlesSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     authors: AuthorsSelect<false> | AuthorsSelect<true>;
+    'used-urls': UsedUrlsSelect<false> | UsedUrlsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -393,6 +395,18 @@ export interface Author {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "used-urls".
+ */
+export interface UsedUrl {
+  id: number;
+  url: string;
+  keyword?: string | null;
+  expiresAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -438,6 +452,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'authors';
         value: number | Author;
+      } | null)
+    | ({
+        relationTo: 'used-urls';
+        value: number | UsedUrl;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -661,6 +679,17 @@ export interface AuthorsSelect<T extends boolean = true> {
   slug?: T;
   bio?: T;
   avatar?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "used-urls_select".
+ */
+export interface UsedUrlsSelect<T extends boolean = true> {
+  url?: T;
+  keyword?: T;
+  expiresAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
