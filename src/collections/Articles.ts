@@ -161,6 +161,9 @@ export const Articles: CollectionConfig = {
     {
       name: 'excerpt',
       type: 'textarea',
+      admin: {
+        description: 'Keep under 200 characters — shown in article previews and social sharing.',
+      },
     },
     {
       name: 'embeds',
