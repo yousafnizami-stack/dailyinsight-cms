@@ -45,7 +45,7 @@ export const Articles: CollectionConfig = {
             const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : doc.category
             const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
             const imageUrl = doc.featuredImageUrl || ''
-            const message = `${doc.title}\n\nRead more: ${articleUrl}`
+            const message = doc.excerpt ? `${doc.excerpt}\n\nRead more 👇` : ''
 
             if (imageUrl) {
               await fetch(`https://graph.facebook.com/v18.0/${pageId}/photos`, {
