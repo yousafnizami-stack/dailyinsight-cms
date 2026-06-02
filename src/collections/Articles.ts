@@ -85,23 +85,24 @@ export const Articles: CollectionConfig = {
         }
         return data
       },
-      async ({ data, req }) => {
-        if (data.featuredImage && typeof data.featuredImage === 'string') {
-          try {
+      async ({ data, req, originalDoc }) => {
+        const featuredImage = data.featuredImage ?? originalDoc?.featuredImage
+        if (!featuredImage) return data
+
+        try {
+          if (typeof featuredImage === 'string') {
             const media = await req.payload.findByID({
               collection: 'media',
-              id: data.featuredImage,
+              id: featuredImage,
             })
             if (media?.url) {
               data.featuredImageUrl = media.url
             }
-          } catch (e) {
-            console.log('FI sync error:', e)
+          } else if (typeof featuredImage === 'object' && featuredImage.url) {
+            data.featuredImageUrl = featuredImage.url
           }
-        } else if (data.featuredImage && typeof data.featuredImage === 'object') {
-          if (data.featuredImage.url) {
-            data.featuredImageUrl = data.featuredImage.url
-          }
+        } catch (e) {
+          console.log('FI sync error:', e)
         }
         return data
       },
