@@ -86,21 +86,24 @@ export const Articles: CollectionConfig = {
         return data
       },
       async ({ data, req }) => {
-        if (!data.featuredImage) return data
+        if (data.featuredImage === undefined && data.featuredImage === null) return data
 
         try {
-          if (typeof data.featuredImage === 'string') {
+          let imageUrl = null
+
+          if (typeof data.featuredImage === 'number' || typeof data.featuredImage === 'string') {
             const media = await req.payload.findByID({
               collection: 'media',
-              id: data.featuredImage,
+              id: data.featuredImage as any,
             })
-            if (media?.url) {
-              data.featuredImageUrl = media.url
-              data.featuredImageAlt = media.alt || ''
-            }
-          } else if (typeof data.featuredImage === 'object' && data.featuredImage.url) {
-            data.featuredImageUrl = data.featuredImage.url
-            data.featuredImageAlt = data.featuredImage.alt || ''
+            imageUrl = media?.cloudinaryUrl || media?.url || null
+          } else if (typeof data.featuredImage === 'object' && data.featuredImage !== null) {
+            imageUrl = data.featuredImage.cloudinaryUrl || data.featuredImage.url || null
+          }
+
+          if (imageUrl) {
+            data.featuredImageUrl = imageUrl
+            console.log('FI synced to:', imageUrl)
           }
         } catch (e) {
           console.log('FI sync error:', e)
