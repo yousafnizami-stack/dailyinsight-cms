@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
     // Upload to Cloudinary
     const base64Image = `data:${contentType};base64,${imageBuffer.toString('base64')}`
     const uploadResult = await cloudinary.uploader.upload(base64Image, {
-      public_id: `dailyinsight/${filename}`,
-      overwrite: true,
+      public_id: `dailyinsight/${filename}-${Date.now()}`,
+      overwrite: false,
       resource_type: 'image',
     })
     console.log('Cloudinary upload success:', uploadResult.secure_url)
