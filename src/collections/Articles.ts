@@ -85,6 +85,26 @@ export const Articles: CollectionConfig = {
         }
         return data
       },
+      async ({ data, req }) => {
+        if (data.featuredImage && typeof data.featuredImage === 'string') {
+          try {
+            const media = await req.payload.findByID({
+              collection: 'media',
+              id: data.featuredImage,
+            })
+            if (media?.url) {
+              data.featuredImageUrl = media.url
+            }
+          } catch (e) {
+            console.log('FI sync error:', e)
+          }
+        } else if (data.featuredImage && typeof data.featuredImage === 'object') {
+          if (data.featuredImage.url) {
+            data.featuredImageUrl = data.featuredImage.url
+          }
+        }
+        return data
+      },
     ],
   },
   fields: [
