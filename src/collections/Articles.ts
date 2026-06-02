@@ -63,6 +63,44 @@ export const Articles: CollectionConfig = {
           console.log('Make.com webhook failed:', e)
         }
       },
+      async ({ doc, previousDoc }) => {
+        try {
+          if (doc.status === 'published' && previousDoc?.status !== 'published') {
+            const pageToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+            const pageId = process.env.FACEBOOK_PAGE_ID
+            if (!pageToken || !pageId) return
+
+            const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : doc.category
+            const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
+            const imageUrl = doc.featuredImageUrl || ''
+            const message = `${doc.title}\n\nRead more: ${articleUrl}`
+
+            if (imageUrl) {
+              await fetch(`https://graph.facebook.com/v18.0/${pageId}/photos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  url: imageUrl,
+                  caption: message,
+                  access_token: pageToken,
+                })
+              })
+            } else {
+              await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  message,
+                  access_token: pageToken,
+                })
+              })
+            }
+            console.log('Facebook post published for:', doc.title)
+          }
+        } catch (e) {
+          console.log('Facebook post failed:', e)
+        }
+      },
     ],
     beforeChange: [
       async (args) => {
