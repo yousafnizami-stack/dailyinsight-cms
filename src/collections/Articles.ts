@@ -38,34 +38,6 @@ export const Articles: CollectionConfig = {
       async ({ doc, previousDoc }) => {
         try {
           if (doc.status === 'published' && previousDoc?.status !== 'published') {
-            const webhookUrl = process.env.MAKE_WEBHOOK_URL
-            if (!webhookUrl) return
-
-            const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : doc.category
-            const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
-            const imageUrl = doc.featuredImageUrl || ''
-
-            await fetch(webhookUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                title: doc.title,
-                url: articleUrl,
-                excerpt: doc.excerpt || '',
-                category: categorySlug,
-                image: doc.featuredImageUrl || '',
-                message: `${doc.title}\n\nRead more: ${articleUrl}`,
-              })
-            })
-            console.log('Make.com webhook triggered for:', doc.title)
-          }
-        } catch (e) {
-          console.log('Make.com webhook failed:', e)
-        }
-      },
-      async ({ doc, previousDoc }) => {
-        try {
-          if (doc.status === 'published' && previousDoc?.status !== 'published') {
             const pageToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
             const pageId = process.env.FACEBOOK_PAGE_ID
             if (!pageToken || !pageId) return
