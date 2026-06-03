@@ -7,13 +7,14 @@ export async function GET() {
     const payload = await getPayload({ config })
     const result = await payload.find({
       collection: 'keywords',
-      where: { active: { equals: true } },
       limit: 200,
       sort: 'category',
     })
     const keywords = result.docs.map(doc => ({
+      id: doc.id,
       keyword: doc.keyword,
       category: doc.category,
+      active: doc.active,
     }))
     return NextResponse.json({ keywords })
   } catch (error: any) {
