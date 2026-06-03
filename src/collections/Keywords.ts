@@ -11,12 +11,12 @@ export const Keywords: CollectionConfig = {
     read: () => true,
     create: ({ req }) => {
       if (Boolean(req.user)) return true
-      const apiKey = req.headers['x-api-key'] as string
+      const apiKey = req.headers.get('x-api-key')
       return apiKey === process.env.PIPELINE_SECRET
     },
     update: ({ req }) => {
       if (Boolean(req.user)) return true
-      const apiKey = req.headers['x-api-key'] as string
+      const apiKey = req.headers.get('x-api-key')
       return apiKey === process.env.PIPELINE_SECRET
     },
     delete: ({ req: { user } }) => Boolean(user),
