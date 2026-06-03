@@ -7,6 +7,20 @@ export const Keywords: CollectionConfig = {
     defaultColumns: ['keyword', 'category', 'active'],
     group: 'Pipeline',
   },
+  access: {
+    read: () => true,
+    create: ({ req }) => {
+      if (Boolean(req.user)) return true
+      const apiKey = req.headers['x-api-key'] as string
+      return apiKey === process.env.PIPELINE_SECRET
+    },
+    update: ({ req }) => {
+      if (Boolean(req.user)) return true
+      const apiKey = req.headers['x-api-key'] as string
+      return apiKey === process.env.PIPELINE_SECRET
+    },
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     {
       name: 'keyword',
