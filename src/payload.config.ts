@@ -14,6 +14,7 @@ import { Categories } from './collections/Categories'
 import { Authors } from './collections/Authors'
 import { UsedUrls } from './collections/UsedUrls'
 import { Keywords } from './collections/Keywords'
+import { PipelinePrompt } from './globals/PipelinePrompt'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -36,6 +37,7 @@ export default buildConfig({
   cookiePrefix: 'di',
   csrf: ['https://dailyinsight.co.uk', 'https://admin.dailyinsight.co.uk'],
   collections: [Users, Media, Articles, TestArticles, Categories, Authors, UsedUrls, Keywords],
+  globals: [PipelinePrompt],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
       ...defaultFeatures,
