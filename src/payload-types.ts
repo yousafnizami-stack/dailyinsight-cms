@@ -99,8 +99,14 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'pipeline-prompt': PipelinePrompt;
+    'pipeline-settings': PipelineSetting;
+  };
+  globalsSelect: {
+    'pipeline-prompt': PipelinePromptSelect<false> | PipelinePromptSelect<true>;
+    'pipeline-settings': PipelineSettingsSelect<false> | PipelineSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -235,6 +241,9 @@ export interface Article {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Keep under 200 characters — shown in article previews and social sharing.
+   */
   excerpt?: string | null;
   embeds?:
     | {
@@ -405,7 +414,8 @@ export interface TestArticle {
 export interface Author {
   id: number;
   name: string;
-  slug?: string | null;
+  slug: string;
+  role?: string | null;
   bio?: string | null;
   avatar?: (number | null) | Media;
   updatedAt: string;
@@ -714,6 +724,7 @@ export interface CategoriesSelect<T extends boolean = true> {
 export interface AuthorsSelect<T extends boolean = true> {
   name?: T;
   slug?: T;
+  role?: T;
   bio?: T;
   avatar?: T;
   updatedAt?: T;
@@ -780,6 +791,61 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pipeline-prompt".
+ */
+export interface PipelinePrompt {
+  id: number;
+  systemPrompt: string;
+  wordCountMin?: number | null;
+  wordCountMax?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pipeline-settings".
+ */
+export interface PipelineSetting {
+  id: number;
+  /**
+   * Turn the entire pipeline on or off
+   */
+  enabled?: boolean | null;
+  schedule?: ('8am' | '8pm' | 'both' | 'off') | null;
+  maxUrlsPerKeyword?: number | null;
+  minContentThreshold?: number | null;
+  dedupExpiryHours?: number | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pipeline-prompt_select".
+ */
+export interface PipelinePromptSelect<T extends boolean = true> {
+  systemPrompt?: T;
+  wordCountMin?: T;
+  wordCountMax?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pipeline-settings_select".
+ */
+export interface PipelineSettingsSelect<T extends boolean = true> {
+  enabled?: T;
+  schedule?: T;
+  maxUrlsPerKeyword?: T;
+  minContentThreshold?: T;
+  dedupExpiryHours?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
