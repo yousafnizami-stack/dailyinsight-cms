@@ -4,27 +4,19 @@ export const Authors: CollectionConfig = {
   slug: 'authors',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'slug'],
+    defaultColumns: ['name', 'role'],
+  },
+  access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   fields: [
-    {
-      name: 'name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'slug',
-      type: 'text',
-      index: true,
-    },
-    {
-      name: 'bio',
-      type: 'textarea',
-    },
-    {
-      name: 'avatar',
-      type: 'upload',
-      relationTo: 'media',
-    },
+    { name: 'name', type: 'text', required: true },
+    { name: 'slug', type: 'text', required: true, unique: true, admin: { hidden: true } },
+    { name: 'role', type: 'text' },
+    { name: 'bio', type: 'textarea' },
+    { name: 'avatar', type: 'upload', relationTo: 'media' },
   ],
 }
