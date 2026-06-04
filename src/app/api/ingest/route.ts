@@ -36,9 +36,10 @@ function htmlToLexical(html: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const apiKey = req.headers.get('x-api-key')
   const auth = req.headers.get('Authorization')
-  if (auth !== `Bearer ${process.env.PIPELINE_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized', received: auth }, { status: 401 })
+  if (apiKey !== process.env.PIPELINE_SECRET && auth !== `Bearer ${process.env.PIPELINE_SECRET}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   try {
     const payload = await getPayload({ config })
