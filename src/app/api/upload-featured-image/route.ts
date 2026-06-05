@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
                 text: 'Write a concise descriptive alt text for this image in one sentence. Be specific about who or what is shown. Maximum 125 characters. Return only the alt text, nothing else.',
               },
             ],
-          }),
+          }],
         }),
       })
       const altData = await altResponse.json()
