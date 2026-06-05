@@ -1,18 +1,19 @@
 'use client'
 import { useState } from 'react'
-import { useField, useFormFields } from '@payloadcms/ui'
+import { useField } from '@payloadcms/ui'
 
 export function AltTextGenerator() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { value: altValue, setValue: setAlt } = useField<string>({ path: 'alt' })
-  const fields = useFormFields(([fields]) => fields)
+  const { value: currentAlt, setValue: setAlt } = useField<string>({ path: 'alt' })
+  const { value: cloudinaryUrl } = useField<string>({ path: 'cloudinaryUrl' })
+  const { value: url } = useField<string>({ path: 'url' })
 
-  const cloudinaryUrl = (fields?.cloudinaryUrl?.value || fields?.url?.value) as string
+  const imageUrl = cloudinaryUrl || url
 
   async function generate() {
-    if (!cloudinaryUrl) {
-      setError('No image URL found — save the image first')
+    if (!imageUrl) {
+      setError('Save the image first then generate alt text')
       return
     }
     setLoading(true)
@@ -21,7 +22,7 @@ export function AltTextGenerator() {
       const res = await fetch('/api/generate-alt-text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageUrl: cloudinaryUrl }),
+        body: JSON.stringify({ imageUrl }),
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
