@@ -38,11 +38,46 @@ export async function POST(req: NextRequest) {
     })
     console.log('Cloudinary upload success:', uploadResult.secure_url)
 
+    // Generate alt text using Claude vision API
+    let generatedAltText = filename.replace(/-/g, ' ')
+    try {
+      const altResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 100,
+          messages: [{
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: { type: 'url', url: uploadResult.secure_url },
+              },
+              {
+                type: 'text',
+                text: 'Write a concise descriptive alt text for this image in one sentence. Be specific about who or what is shown. Maximum 125 characters. Return only the alt text, nothing else.',
+              },
+            ],
+          }),
+        }),
+      })
+      const altData = await altResponse.json()
+      generatedAltText = altData.content?.[0]?.text?.trim() || generatedAltText
+      console.log('Generated alt text:', generatedAltText)
+    } catch (e) {
+      console.log('Alt text generation failed, using filename:', e)
+    }
+
     // Create media record using Payload's local API with file data
     const mediaRecord = await payload.create({
       collection: 'media',
       data: {
-        alt: filename.replace(/-/g, ' '),
+        alt: generatedAltText,
         cloudinaryUrl: uploadResult.secure_url,
         cloudinaryPublicId: uploadResult.public_id,
         cloudinaryResourceType: 'image',
