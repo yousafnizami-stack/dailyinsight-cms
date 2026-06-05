@@ -172,6 +172,10 @@ export const Articles: CollectionConfig = {
       name: 'featuredImage',
       type: 'upload',
       relationTo: 'media',
+      displayPreview: true,
+      admin: {
+        description: 'Click the edit icon to update the image alt text',
+      },
     },
     {
       name: 'imagePicker',
