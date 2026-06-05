@@ -4,6 +4,19 @@ import config from '@payload-config'
 
 const PIPELINE_SECRET = process.env.PIPELINE_SECRET || 'kF3zX8vQ'
 
+export async function GET() {
+  try {
+    const payload = await getPayload({ config })
+    const result = await payload.findGlobal({
+      slug: 'pipeline-prompt',
+      overrideAccess: true,
+    })
+    return NextResponse.json(result)
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const apiKey = req.headers.get('x-api-key')
