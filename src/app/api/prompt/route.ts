@@ -11,14 +11,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     const body = await req.json()
+    console.log('Saving prompt, length:', body.systemPrompt?.length)
     const payload = await getPayload({ config })
     const result = await payload.updateGlobal({
       slug: 'pipeline-prompt',
       data: body,
       overrideAccess: true,
     })
+    console.log('Saved result systemPrompt length:', result?.systemPrompt?.length)
     return NextResponse.json(result)
   } catch (error: any) {
+    console.error('Prompt save error:', error.message)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
