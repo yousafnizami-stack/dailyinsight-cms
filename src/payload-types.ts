@@ -102,10 +102,12 @@ export interface Config {
   globals: {
     'pipeline-prompt': PipelinePrompt;
     'pipeline-settings': PipelineSetting;
+    'pipeline-test-prompt': PipelineTestPrompt;
   };
   globalsSelect: {
     'pipeline-prompt': PipelinePromptSelect<false> | PipelinePromptSelect<true>;
     'pipeline-settings': PipelineSettingsSelect<false> | PipelineSettingsSelect<true>;
+    'pipeline-test-prompt': PipelineTestPromptSelect<false> | PipelineTestPromptSelect<true>;
   };
   locale: null;
   widgets: {
@@ -217,6 +219,7 @@ export interface Article {
         | 'web-desk'
         | 'news-desk'
         | 'celebrity-desk'
+        | 'royal-family-desk'
       )
     | null;
   sourceUrls?:
@@ -823,6 +826,17 @@ export interface PipelineSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pipeline-test-prompt".
+ */
+export interface PipelineTestPrompt {
+  id: number;
+  systemPrompt?: string | null;
+  enabled?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pipeline-prompt_select".
  */
 export interface PipelinePromptSelect<T extends boolean = true> {
@@ -843,6 +857,17 @@ export interface PipelineSettingsSelect<T extends boolean = true> {
   maxUrlsPerKeyword?: T;
   minContentThreshold?: T;
   dedupExpiryHours?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pipeline-test-prompt_select".
+ */
+export interface PipelineTestPromptSelect<T extends boolean = true> {
+  systemPrompt?: T;
+  enabled?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
