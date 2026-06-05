@@ -40,7 +40,7 @@ export const Articles: CollectionConfig = {
       async ({ doc, previousDoc }) => {
         try {
           if (doc.status === 'published' && previousDoc?.status !== 'published') {
-            await new Promise(resolve => setTimeout(resolve, 10000))
+            await new Promise(resolve => setTimeout(resolve, 300000))
             const pageToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
             const pageId = process.env.FACEBOOK_PAGE_ID
             if (!pageToken || !pageId) return
