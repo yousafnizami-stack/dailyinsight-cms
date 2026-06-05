@@ -1,20 +1,21 @@
 'use client'
 import { useState } from 'react'
-import { useField, useFormFields } from '@payloadcms/ui'
+import { useFormFields } from '@payloadcms/ui'
 
 export function AltTextGenerator() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // useField only for the declared 'alt' field — this component's own field
-  const { setValue: setAlt } = useField<string>({ path: 'alt' })
-
-  // useFormFields (read-only) to observe image URL fields without registering them
-  // as mutable form fields. Using useField({ path: 'url' }) was the bug: it registered
-  // Payload's computed upload URL as user-submitted data, causing 500s on save.
+  // Read-only observation of image URL fields — matches FeaturedImagePreview pattern.
+  // useField must NOT be used here: afterInput components share the DOM with Payload's
+  // own field input, so useField creates a second competing registration for the same
+  // path, causing form state conflicts that result in 500s on upload collection saves.
   const imageUrl = useFormFields(([fields]) =>
     (fields?.['cloudinaryUrl']?.value || fields?.['url']?.value) as string | undefined
   )
+
+  // Dispatch directly to the form reducer to update 'alt' without registering as owner.
+  const dispatchFields = useFormFields(([, dispatch]) => dispatch)
 
   async function generate() {
     if (!imageUrl) {
@@ -31,7 +32,7 @@ export function AltTextGenerator() {
       })
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      setAlt(data.altText)
+      dispatchFields({ type: 'UPDATE', path: 'alt', value: data.altText })
     } catch (e: any) {
       setError(e.message)
     } finally {
