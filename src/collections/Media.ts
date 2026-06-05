@@ -9,6 +9,12 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
+      required: false,
+      admin: {
+        components: {
+          afterInput: ['@/components/AltTextGenerator#AltTextGenerator'],
+        },
+      },
     },
   ],
   upload: {
