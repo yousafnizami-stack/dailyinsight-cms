@@ -1,29 +1,23 @@
 'use client'
 import { useState } from 'react'
-import { useFormFields } from '@payloadcms/ui'
+import { useAllFormFields } from '@payloadcms/ui'
 
 export function AltTextGenerator() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [fields, dispatchFields] = useAllFormFields()
 
-  // Read-only observation of image URL fields — matches FeaturedImagePreview pattern.
-  // useField must NOT be used here: afterInput components share the DOM with Payload's
-  // own field input, so useField creates a second competing registration for the same
-  // path, causing form state conflicts that result in 500s on upload collection saves.
-  const imageUrl = useFormFields(([fields]) =>
-    (fields?.['cloudinaryUrl']?.value || fields?.['url']?.value) as string | undefined
-  )
-
-  // Dispatch directly to the form reducer to update 'alt' without registering as owner.
-  const dispatchFields = useFormFields(([, dispatch]) => dispatch)
+  const imageUrl = (fields?.cloudinaryUrl?.value || fields?.url?.value) as string
 
   async function generate() {
     if (!imageUrl) {
-      setError('Save the image first then generate alt text')
+      setError('Save the image first, then generate alt text')
       return
     }
     setLoading(true)
     setError('')
+    setSuccess('')
     try {
       const res = await fetch('/api/generate-alt-text', {
         method: 'POST',
@@ -33,38 +27,34 @@ export function AltTextGenerator() {
       const data = await res.json()
       if (data.error) throw new Error(data.error)
       dispatchFields({ type: 'UPDATE', path: 'alt', value: data.altText })
+      setSuccess(data.altText)
     } catch (e: any) {
       setError(e.message)
-    } finally {
-      setLoading(false)
     }
+    setLoading(false)
   }
 
-  try {
-    return (
-      <div style={{ marginTop: '4px' }}>
-        <button
-          type="button"
-          onClick={generate}
-          disabled={loading}
-          style={{
-            background: loading ? '#555' : '#C8102E',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            padding: '4px 12px',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            letterSpacing: '0.05em',
-          }}
-        >
-          {loading ? 'Generating...' : '✨ Generate Alt Text'}
-        </button>
-        {error && <p style={{ color: 'red', fontSize: '11px', marginTop: '4px' }}>{error}</p>}
-      </div>
-    )
-  } catch {
-    return null
-  }
+  return (
+    <div style={{ marginBottom: '16px' }}>
+      <button
+        type="button"
+        onClick={generate}
+        disabled={loading}
+        style={{
+          background: loading ? '#555' : '#C8102E',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          padding: '6px 14px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          cursor: loading ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {loading ? 'Generating...' : '✨ Generate Alt Text'}
+      </button>
+      {success && <p style={{ color: '#22c55e', fontSize: '11px', marginTop: '4px' }}>✓ {success}</p>}
+      {error && <p style={{ color: '#ef4444', fontSize: '11px', marginTop: '4px' }}>{error}</p>}
+    </div>
+  )
 }

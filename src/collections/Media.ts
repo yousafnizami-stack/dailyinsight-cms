@@ -10,9 +10,13 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
       required: false,
+    },
+    {
+      name: 'altTextGenerator',
+      type: 'ui',
       admin: {
         components: {
-          afterInput: ['@/components/AltTextGenerator#AltTextGenerator'],
+          Field: '@/components/AltTextGenerator#AltTextGenerator',
         },
       },
     },
