@@ -172,6 +172,11 @@ export const Articles: CollectionConfig = {
       name: 'featuredImage',
       type: 'upload',
       relationTo: 'media',
+      admin: {
+        components: {
+          afterInput: ['@/components/FeaturedImageTitle#FeaturedImageTitle'],
+        },
+      },
     },
     {
       name: 'imagePicker',
