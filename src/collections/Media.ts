@@ -11,15 +11,6 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: false,
     },
-    {
-      name: 'altTextGenerator',
-      type: 'ui',
-      admin: {
-        components: {
-          Field: '@/components/AltTextGenerator#AltTextGenerator',
-        },
-      },
-    },
   ],
   upload: {
     disableLocalStorage: true,
