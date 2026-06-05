@@ -172,7 +172,6 @@ export const Articles: CollectionConfig = {
       name: 'featuredImage',
       type: 'upload',
       relationTo: 'media',
-      displayPreview: true,
     },
     {
       name: 'imagePicker',

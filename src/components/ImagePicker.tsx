@@ -18,7 +18,11 @@ export function ImagePicker() {
     setUploading(url)
     setError(null)
     try {
-      const filename = `di-image-${Date.now()}`
+      const filename = (title || 'article')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 80)
       const res = await fetch('/api/upload-featured-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

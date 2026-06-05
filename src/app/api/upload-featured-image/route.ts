@@ -87,6 +87,12 @@ export async function POST(req: NextRequest) {
         width: uploadResult.width,
         height: uploadResult.height,
       } as any,
+      file: {
+        data: imageBuffer,
+        mimetype: contentType,
+        name: `${filename}.${ext}`,
+        size: imageBuffer.byteLength,
+      },
     })
     console.log('Media record created:', mediaRecord.id)
 
