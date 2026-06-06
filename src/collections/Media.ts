@@ -4,6 +4,7 @@ export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     useAsTitle: 'title',
+    defaultColumns: ['title', 'alt'],
   },
   access: {
     read: () => true,
@@ -23,5 +24,6 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
+    adminThumbnail: 'cloudinaryUrl',
   },
 }
