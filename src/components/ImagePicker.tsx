@@ -98,7 +98,15 @@ export function ImagePicker() {
           )
         })}
       </div>
-      <p style={{ margin: '12px 0 0', fontSize: '11px', color: '#888' }}>Images saved to Media can be inserted into the article body via the rich text editor → Insert Image.</p>
+      <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <p style={{ margin: '0', fontSize: '11px', color: '#888' }}>Images saved to Media can be inserted into the article body via the rich text editor → Insert Image.</p>
+        <button
+          onClick={() => window.location.reload()}
+          style={{ padding: '6px 16px', background: '#111', color: 'white', border: 'none', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap', marginLeft: '12px' }}
+        >
+          Done — Reload Page
+        </button>
+      </div>
     </div>
   )
 }
