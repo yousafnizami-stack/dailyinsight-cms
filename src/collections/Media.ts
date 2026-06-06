@@ -2,6 +2,11 @@ import type { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: {
+    useAsTitle: 'filename',
+    defaultColumns: ['filename', 'alt'],
+    listSearchableFields: ['filename', 'alt', 'title'],
+  },
   access: {
     read: () => true,
     update: ({ req: { user } }) => Boolean(user),
@@ -20,6 +25,6 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
-    adminThumbnail: ({ doc }) => doc.url as string,
+    adminThumbnail: ({ doc }: { doc: any }) => doc.url as string,
   },
 }
