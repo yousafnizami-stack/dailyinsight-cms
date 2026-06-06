@@ -155,7 +155,7 @@ export const Articles: CollectionConfig = {
         { label: 'Web Desk', value: 'web-desk' },
         { label: 'News Desk', value: 'news-desk' },
         { label: 'Celebrity Desk', value: 'celebrity-desk' },
-        { label: 'Royal Family Desk', value: 'royal-family-desk' },
+        { label: 'Royal Family News Desk', value: 'royal-family-desk' },
       ],
     },
     {
