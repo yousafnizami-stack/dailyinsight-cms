@@ -39,34 +39,28 @@ export const Articles: CollectionConfig = {
       },
       async ({ doc, previousDoc }) => {
         if (doc.status === 'published' && previousDoc?.status !== 'published') {
-          // Fire and forget — don't await so CMS save is not blocked
-          ;(async () => {
-            try {
-              const pageToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
-              const pageId = process.env.FACEBOOK_PAGE_ID
-              if (!pageToken || !pageId) return
+          try {
+            const pageToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+            const pageId = process.env.FACEBOOK_PAGE_ID
+            if (pageToken && pageId) {
               const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : doc.category
               const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
-              // Pre-warm Facebook's scraper before posting
-              try {
-                await fetch(`https://graph.facebook.com/v18.0/?id=${encodeURIComponent(articleUrl)}&scrape=true&access_token=${pageToken}`, { method: 'POST' })
-                await new Promise(resolve => setTimeout(resolve, 3000))
-              } catch {}
-              const message = doc.excerpt ? `${doc.excerpt}\n\nRead more 👇` : doc.title
+              await fetch(`https://graph.facebook.com/v18.0/?id=${encodeURIComponent(articleUrl)}&scrape=true&access_token=${pageToken}`, { method: 'POST' })
+              await new Promise(resolve => setTimeout(resolve, 2000))
               await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  message,
+                  message: doc.excerpt ? `${doc.excerpt}\n\nRead more 👇` : doc.title,
                   link: articleUrl,
                   access_token: pageToken,
                 })
               })
               console.log('Facebook post published for:', doc.title)
-            } catch (e) {
-              console.log('Facebook post failed:', e)
             }
-          })()
+          } catch (e) {
+            console.log('Facebook post failed:', e)
+          }
         }
       },
     ],
