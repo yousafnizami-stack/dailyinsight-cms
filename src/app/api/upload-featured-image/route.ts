@@ -11,7 +11,7 @@ cloudinary.config({
 
 export async function POST(req: NextRequest) {
   try {
-    const { imageUrl, filename, articleId, collection } = await req.json()
+    const { imageUrl, filename, articleId, collection, saveToMediaOnly } = await req.json()
     console.log('Upload request:', { imageUrl, filename, articleId, collection })
 
     const payload = await getPayload({ config })
@@ -96,19 +96,22 @@ export async function POST(req: NextRequest) {
     })
     console.log('Media record created:', mediaRecord.id)
 
-    // Update article
-    const collectionSlug = collection || 'articles'
-    await payload.update({
-      collection: collectionSlug as any,
-      id: Number(articleId),
-      data: {
-        featuredImage: mediaRecord.id,
-        featuredImageUrl: uploadResult.secure_url,
-        featuredImageAlt: filename.replace(/-/g, ' '),
-        imageOptions: [],
-      } as any,
-    })
-    console.log('Article updated successfully')
+    // Update article only if not saveToMediaOnly
+    if (!saveToMediaOnly) {
+      const collectionSlug = collection || 'articles'
+      await payload.update({
+        collection: collectionSlug as any,
+        id: Number(articleId),
+        data: {
+          featuredImage: mediaRecord.id,
+          featuredImageUrl: uploadResult.secure_url,
+          featuredImageAlt: filename.replace(/-/g, ' '),
+        } as any,
+      })
+      console.log('Article updated successfully')
+    } else {
+      console.log('Saved to media only, article not updated')
+    }
 
     return NextResponse.json({ success: true, url: uploadResult.secure_url })
   } catch (error: any) {

@@ -85,8 +85,9 @@ export const Articles: CollectionConfig = {
         }
         return data
       },
-      async ({ data, req }) => {
-        if (data.featuredImage === undefined && data.featuredImage === null) return data
+      async ({ data, req, originalDoc }) => {
+        if (data.featuredImage === undefined) return data
+        if (data.featuredImage === originalDoc?.featuredImage) return data
 
         try {
           let imageUrl = null
