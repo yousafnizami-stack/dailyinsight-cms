@@ -20,6 +20,6 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
-    adminThumbnail: 'url',
+    adminThumbnail: ({ doc }) => doc.url as string,
   },
 }
