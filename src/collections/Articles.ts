@@ -45,6 +45,7 @@ export const Articles: CollectionConfig = {
             if (pageToken && pageId) {
               const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : doc.category
               const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
+              await new Promise(resolve => setTimeout(resolve, 45000))
               await fetch(`https://graph.facebook.com/v18.0/?id=${encodeURIComponent(articleUrl)}&scrape=true&access_token=${pageToken}`, { method: 'POST' })
               await new Promise(resolve => setTimeout(resolve, 500))
               await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {
