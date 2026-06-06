@@ -42,12 +42,16 @@ export const Articles: CollectionConfig = {
           // Fire and forget — don't await so CMS save is not blocked
           ;(async () => {
             try {
-              await new Promise(resolve => setTimeout(resolve, 300000))
               const pageToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN
               const pageId = process.env.FACEBOOK_PAGE_ID
               if (!pageToken || !pageId) return
               const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : doc.category
               const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${doc.slug}`
+              // Pre-warm Facebook's scraper before posting
+              try {
+                await fetch(`https://graph.facebook.com/v18.0/?id=${encodeURIComponent(articleUrl)}&scrape=true&access_token=${pageToken}`, { method: 'POST' })
+                await new Promise(resolve => setTimeout(resolve, 3000))
+              } catch {}
               const message = doc.excerpt ? `${doc.excerpt}\n\nRead more 👇` : doc.title
               await fetch(`https://graph.facebook.com/v18.0/${pageId}/feed`, {
                 method: 'POST',
