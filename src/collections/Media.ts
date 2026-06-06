@@ -20,5 +20,6 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
+    adminThumbnail: 'cloudinaryUrl',
   },
 }
