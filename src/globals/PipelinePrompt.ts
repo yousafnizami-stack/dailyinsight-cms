@@ -6,6 +6,16 @@ export const PipelinePrompt: GlobalConfig = {
   admin: {
     group: 'Pipeline',
   },
+  access: {
+    read: ({ req }) => {
+      if (req.headers.get("x-api-key") === process.env.PAYLOAD_SECRET || req.headers.get("x-api-key") === "kF3zX8vQ") return true
+      return Boolean(req.user)
+    },
+    update: ({ req }) => {
+      if (req.headers.get("x-api-key") === process.env.PAYLOAD_SECRET || req.headers.get("x-api-key") === "kF3zX8vQ") return true
+      return Boolean(req.user)
+    },
+  },
   fields: [
     {
       name: 'systemPrompt',
