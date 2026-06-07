@@ -11,7 +11,7 @@ export async function ViewOnSiteButton({ id, payload, collectionSlug = 'articles
 
   try {
     const article = await payload.findByID({
-      collection: collectionSlug,
+      collection: collectionSlug as 'articles' | 'rss-articles' | 'fe-articles',
       id,
       depth: 1,
     })
