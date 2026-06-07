@@ -17,6 +17,24 @@ export const PipelinePrompt: GlobalConfig = {
       },
     },
     {
+      name: 'rssSystemPrompt',
+      type: 'textarea',
+      required: false,
+      label: 'RSS Pipeline Prompt',
+      admin: {
+        rows: 14,
+      },
+    },
+    {
+      name: 'testSystemPrompt',
+      type: 'textarea',
+      required: false,
+      label: 'Test Pipeline Prompt',
+      admin: {
+        rows: 14,
+      },
+    },
+    {
       name: 'wordCountMin',
       type: 'number',
       defaultValue: 500,
