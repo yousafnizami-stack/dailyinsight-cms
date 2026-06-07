@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
-export const RssArticles: CollectionConfig = {
-  slug: 'rss-articles',
-  labels: { singular: 'RSS Article', plural: 'RSS Articles' },
+export const FEArticles: CollectionConfig = {
+  slug: 'fe-articles',
+  labels: { singular: 'FE Article', plural: 'FE Ready' },
   access: {
     create: ({ req: { user } }) => Boolean(user),
     read: () => true,
@@ -10,6 +10,7 @@ export const RssArticles: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    group: 'FE Ready',
     defaultColumns: ['title', 'status', 'category', 'publishedAt'],
     pagination: {
       defaultLimit: 50,
@@ -17,14 +18,28 @@ export const RssArticles: CollectionConfig = {
     },
     components: {
       edit: {
-        beforeDocumentControls: [
-          '@/components/ViewOnSiteButton#ViewOnSiteButton',
-          '@/components/PromoteToFEButton#PromoteToFEButton',
-        ],
+        beforeDocumentControls: ['@/components/ViewOnSiteButton#ViewOnSiteButton'],
       },
     },
   },
   hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        try {
+          if (doc.status === 'published') {
+            const slug = doc.slug
+            const categorySlug = typeof doc.category === 'object' ? doc.category?.slug : null
+            if (slug && categorySlug) {
+              await fetch(
+                `${process.env.NEXT_PUBLIC_SITE_URL}/api/revalidate?path=/${categorySlug}/${slug}&secret=${process.env.REVALIDATE_SECRET}`,
+              )
+            }
+          }
+        } catch (err) {
+          console.error('Revalidation failed:', err)
+        }
+      },
+    ],
     beforeChange: [
       async (args) => {
         const { data, originalDoc } = args
@@ -34,7 +49,7 @@ export const RssArticles: CollectionConfig = {
         if (data.featured === true) {
           const { req } = args
           await req.payload.update({
-            collection: 'rss-articles',
+            collection: 'fe-articles',
             where: {
               and: [
                 { featured: { equals: true } },

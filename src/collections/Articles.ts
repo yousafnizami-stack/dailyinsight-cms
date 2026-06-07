@@ -17,7 +17,10 @@ export const Articles: CollectionConfig = {
     },
     components: {
       edit: {
-        beforeDocumentControls: ['@/components/ViewOnSiteButton#ViewOnSiteButton'],
+        beforeDocumentControls: [
+          '@/components/ViewOnSiteButton#ViewOnSiteButton',
+          '@/components/PromoteToFEButton#PromoteToFEButton',
+        ],
       },
     },
   },
