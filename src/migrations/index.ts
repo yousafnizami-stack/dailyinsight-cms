@@ -7,6 +7,7 @@ import * as migration_20260605_181717 from './20260605_181717';
 import * as migration_20260607_103856_add_caption_to_media from './20260607_103856_add_caption_to_media';
 import * as migration_20260607_131131_add_rss_sources_collection from './20260607_131131_add_rss_sources_collection';
 import * as migration_20260607_132618_add_rss_articles from './20260607_132618_add_rss_articles';
+import * as migration_20260607_151321_add_rss_test_prompt_fields from './20260607_151321_add_rss_test_prompt_fields';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260607_132618_add_rss_articles.up,
     down: migration_20260607_132618_add_rss_articles.down,
-    name: '20260607_132618_add_rss_articles'
+    name: '20260607_132618_add_rss_articles',
+  },
+  {
+    up: migration_20260607_151321_add_rss_test_prompt_fields.up,
+    down: migration_20260607_151321_add_rss_test_prompt_fields.down,
+    name: '20260607_151321_add_rss_test_prompt_fields'
   },
 ];

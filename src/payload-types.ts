@@ -1007,6 +1007,8 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface PipelinePrompt {
   id: number;
   systemPrompt: string;
+  rssSystemPrompt?: string | null;
+  testSystemPrompt?: string | null;
   wordCountMin?: number | null;
   wordCountMax?: number | null;
   updatedAt?: string | null;
@@ -1046,6 +1048,8 @@ export interface PipelineTestPrompt {
  */
 export interface PipelinePromptSelect<T extends boolean = true> {
   systemPrompt?: T;
+  rssSystemPrompt?: T;
+  testSystemPrompt?: T;
   wordCountMin?: T;
   wordCountMax?: T;
   updatedAt?: T;
