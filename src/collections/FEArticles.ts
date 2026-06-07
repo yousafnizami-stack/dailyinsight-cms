@@ -10,7 +10,6 @@ export const FEArticles: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    group: false,
     defaultColumns: ['title', 'status', 'category', 'publishedAt'],
     listSearchableFields: ['title', 'slug', 'reviewNote'],
     pagination: {
