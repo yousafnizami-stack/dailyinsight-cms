@@ -18,7 +18,13 @@ export const FEArticles: CollectionConfig = {
     },
     components: {
       edit: {
-        beforeDocumentControls: ['@/components/ViewOnSiteButton#ViewOnSiteButton'],
+        beforeDocumentControls: [
+          {
+            path: '@/components/ViewOnSiteButton',
+            exportName: 'ViewOnSiteButton',
+            serverProps: { collectionSlug: 'fe-articles' },
+          },
+        ],
       },
     },
   },

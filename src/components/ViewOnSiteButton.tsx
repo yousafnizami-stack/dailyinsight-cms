@@ -3,14 +3,15 @@ import type { Payload } from 'payload'
 type Props = {
   id?: number | string
   payload?: Payload
+  collectionSlug?: string
 }
 
-export async function ViewOnSiteButton({ id, payload }: Props) {
+export async function ViewOnSiteButton({ id, payload, collectionSlug = 'articles' }: Props) {
   if (!id || !payload) return null
 
   try {
     const article = await payload.findByID({
-      collection: 'articles',
+      collection: collectionSlug,
       id,
       depth: 1,
     })

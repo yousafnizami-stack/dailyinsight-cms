@@ -18,7 +18,11 @@ export const RssArticles: CollectionConfig = {
     components: {
       edit: {
         beforeDocumentControls: [
-          '@/components/ViewOnSiteButton#ViewOnSiteButton',
+          {
+            path: '@/components/ViewOnSiteButton',
+            exportName: 'ViewOnSiteButton',
+            serverProps: { collectionSlug: 'rss-articles' },
+          },
           '@/components/PromoteToFEButton#PromoteToFEButton',
         ],
       },
