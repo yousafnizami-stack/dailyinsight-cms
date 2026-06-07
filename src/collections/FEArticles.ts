@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 export const FEArticles: CollectionConfig = {
   slug: 'fe-articles',
-  labels: { singular: 'FE Article', plural: 'FE Ready' },
+  labels: { singular: 'FE Article', plural: '⭐ FE Ready' },
   access: {
     create: ({ req: { user } }) => Boolean(user),
     read: () => true,
@@ -10,8 +10,9 @@ export const FEArticles: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    group: 'FE Ready',
+    group: false,
     defaultColumns: ['title', 'status', 'category', 'publishedAt'],
+    listSearchableFields: ['title', 'slug', 'reviewNote'],
     pagination: {
       defaultLimit: 50,
       limits: [10, 25, 50, 100],
