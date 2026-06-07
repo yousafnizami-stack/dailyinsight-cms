@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
-export const TestArticles: CollectionConfig = {
-  slug: 'test-articles',
-  labels: { singular: 'TP Article', plural: 'TP Articles' },
+export const RssArticles: CollectionConfig = {
+  slug: 'rss-articles',
+  labels: { singular: 'RSS Article', plural: 'RSS Articles' },
   access: {
     create: ({ req: { user } }) => Boolean(user),
     read: () => true,
@@ -15,11 +15,6 @@ export const TestArticles: CollectionConfig = {
       defaultLimit: 50,
       limits: [10, 25, 50, 100],
     },
-    components: {
-      edit: {
-        beforeDocumentControls: ['@/components/PromoteToArticlesButton#PromoteToArticlesButton'],
-      },
-    },
   },
   hooks: {
     beforeChange: [
@@ -31,7 +26,7 @@ export const TestArticles: CollectionConfig = {
         if (data.featured === true) {
           const { req } = args
           await req.payload.update({
-            collection: 'test-articles',
+            collection: 'rss-articles',
             where: {
               and: [
                 { featured: { equals: true } },
@@ -40,6 +35,38 @@ export const TestArticles: CollectionConfig = {
             },
             data: { featured: false } as any,
           })
+        }
+        return data
+      },
+      async ({ data, req, originalDoc }) => {
+        if (data.featuredImage === undefined) return data
+        const newId = typeof data.featuredImage === 'object' && data.featuredImage !== null
+          ? (data.featuredImage as any).id
+          : data.featuredImage
+        const oldId = typeof originalDoc?.featuredImage === 'object' && originalDoc?.featuredImage !== null
+          ? (originalDoc.featuredImage as any).id
+          : originalDoc?.featuredImage
+        if (newId === oldId) return data
+
+        try {
+          let imageUrl = null
+
+          if (typeof data.featuredImage === 'number' || typeof data.featuredImage === 'string') {
+            const media = await req.payload.findByID({
+              collection: 'media',
+              id: data.featuredImage as any,
+            })
+            imageUrl = media?.cloudinaryUrl || media?.url || null
+          } else if (typeof data.featuredImage === 'object' && data.featuredImage !== null) {
+            imageUrl = data.featuredImage.cloudinaryUrl || data.featuredImage.url || null
+          }
+
+          if (imageUrl) {
+            data.featuredImageUrl = imageUrl
+            console.log('FI synced to:', imageUrl)
+          }
+        } catch (e) {
+          console.log('FI sync error:', e)
         }
         return data
       },
@@ -81,6 +108,7 @@ export const TestArticles: CollectionConfig = {
         { label: 'Web Desk', value: 'web-desk' },
         { label: 'News Desk', value: 'news-desk' },
         { label: 'Celebrity Desk', value: 'celebrity-desk' },
+        { label: 'Royal Family News Desk', value: 'royal-family-desk' },
       ],
     },
     {
@@ -102,6 +130,11 @@ export const TestArticles: CollectionConfig = {
       name: 'featuredImage',
       type: 'upload',
       relationTo: 'media',
+      admin: {
+        components: {
+          afterInput: ['@/components/FeaturedImageTitle#FeaturedImageTitle'],
+        },
+      },
     },
     {
       name: 'imagePicker',
@@ -119,6 +152,9 @@ export const TestArticles: CollectionConfig = {
     {
       name: 'excerpt',
       type: 'textarea',
+      admin: {
+        description: 'Keep under 200 characters — shown in article previews and social sharing.',
+      },
     },
     {
       name: 'embeds',

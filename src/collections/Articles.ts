@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  labels: { singular: 'KW Article', plural: 'KW Articles' },
   access: {
     create: ({ req: { user } }) => Boolean(user),
     read: () => true,
