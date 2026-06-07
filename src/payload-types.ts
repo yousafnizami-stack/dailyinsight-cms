@@ -67,6 +67,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    'fe-articles': FeArticle;
     users: User;
     media: Media;
     articles: Article;
@@ -77,7 +78,6 @@ export interface Config {
     keywords: Keyword;
     'rss-sources': RssSource;
     'rss-articles': RssArticle;
-    'fe-articles': FeArticle;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -85,6 +85,7 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    'fe-articles': FeArticlesSelect<false> | FeArticlesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
@@ -95,7 +96,6 @@ export interface Config {
     keywords: KeywordsSelect<false> | KeywordsSelect<true>;
     'rss-sources': RssSourcesSelect<false> | RssSourcesSelect<true>;
     'rss-articles': RssArticlesSelect<false> | RssArticlesSelect<true>;
-    'fe-articles': FeArticlesSelect<false> | FeArticlesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -145,29 +145,121 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "fe-articles".
  */
-export interface User {
+export interface FeArticle {
   id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
+  title: string;
+  status: 'draft' | 'published';
+  category?: (number | null) | Category;
+  /**
+   * Byline shown on article page
+   */
+  author?:
+    | (
+        | 'di-royal-reporter'
+        | 'di-entertainment-desk'
+        | 'di-music-desk'
+        | 'di-film-desk'
+        | 'web-desk'
+        | 'news-desk'
+        | 'celebrity-desk'
+        | 'royal-family-desk'
+      )
+    | null;
+  sourceUrls?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        url?: string | null;
+        id?: string | null;
       }[]
     | null;
-  password?: string | null;
-  collection: 'users';
+  featuredImage?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Keep under 200 characters — shown in article previews and social sharing.
+   */
+  excerpt?: string | null;
+  embeds?:
+    | {
+        platform?: string | null;
+        embedHtml?: string | null;
+        caption?: string | null;
+        insertAfterParagraph?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  reviewNote?: string | null;
+  /**
+   * Source pipeline this article was promoted from
+   */
+  source?: ('kw-pipeline' | 'rss-pipeline') | null;
+  /**
+   * Pin this article to the top of the homepage
+   */
+  featured?: boolean | null;
+  slug: string;
+  featuredImageUrl?: string | null;
+  featuredImageAlt?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  publishedAt?: string | null;
+  publishedDate?: string | null;
+  confidence?: number | null;
+  headlineVariants?:
+    | {
+        variant?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  readingTime?: number | null;
+  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
+  /**
+   * Lower numbers appear first. Leave blank for default ordering.
+   */
+  displayOrder?: number | null;
+  imageOptions?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -208,6 +300,32 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -308,18 +426,6 @@ export interface Article {
     | number
     | boolean
     | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -582,108 +688,6 @@ export interface RssArticle {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fe-articles".
- */
-export interface FeArticle {
-  id: number;
-  title: string;
-  status: 'draft' | 'published';
-  category?: (number | null) | Category;
-  /**
-   * Byline shown on article page
-   */
-  author?:
-    | (
-        | 'di-royal-reporter'
-        | 'di-entertainment-desk'
-        | 'di-music-desk'
-        | 'di-film-desk'
-        | 'web-desk'
-        | 'news-desk'
-        | 'celebrity-desk'
-        | 'royal-family-desk'
-      )
-    | null;
-  sourceUrls?:
-    | {
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  featuredImage?: (number | null) | Media;
-  body?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Keep under 200 characters — shown in article previews and social sharing.
-   */
-  excerpt?: string | null;
-  embeds?:
-    | {
-        platform?: string | null;
-        embedHtml?: string | null;
-        caption?: string | null;
-        insertAfterParagraph?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  reviewNote?: string | null;
-  /**
-   * Pin this article to the top of the homepage
-   */
-  featured?: boolean | null;
-  slug: string;
-  featuredImageUrl?: string | null;
-  featuredImageAlt?: string | null;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  tags?:
-    | {
-        tag?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  publishedAt?: string | null;
-  publishedDate?: string | null;
-  confidence?: number | null;
-  headlineVariants?:
-    | {
-        variant?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  readingTime?: number | null;
-  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
-  /**
-   * Lower numbers appear first. Leave blank for default ordering.
-   */
-  displayOrder?: number | null;
-  imageOptions?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -706,6 +710,10 @@ export interface PayloadKv {
 export interface PayloadLockedDocument {
   id: number;
   document?:
+    | ({
+        relationTo: 'fe-articles';
+        value: number | FeArticle;
+      } | null)
     | ({
         relationTo: 'users';
         value: number | User;
@@ -745,10 +753,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'rss-articles';
         value: number | RssArticle;
-      } | null)
-    | ({
-        relationTo: 'fe-articles';
-        value: number | FeArticle;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -791,6 +795,63 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "fe-articles_select".
+ */
+export interface FeArticlesSelect<T extends boolean = true> {
+  title?: T;
+  status?: T;
+  category?: T;
+  author?: T;
+  sourceUrls?:
+    | T
+    | {
+        url?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  body?: T;
+  excerpt?: T;
+  embeds?:
+    | T
+    | {
+        platform?: T;
+        embedHtml?: T;
+        caption?: T;
+        insertAfterParagraph?: T;
+        id?: T;
+      };
+  reviewNote?: T;
+  source?: T;
+  featured?: T;
+  slug?: T;
+  featuredImageUrl?: T;
+  featuredImageAlt?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  publishedAt?: T;
+  publishedDate?: T;
+  confidence?: T;
+  headlineVariants?:
+    | T
+    | {
+        variant?: T;
+        id?: T;
+      };
+  readingTime?: T;
+  articleType?: T;
+  displayOrder?: T;
+  imageOptions?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1017,62 +1078,6 @@ export interface RssSourcesSelect<T extends boolean = true> {
  * via the `definition` "rss-articles_select".
  */
 export interface RssArticlesSelect<T extends boolean = true> {
-  title?: T;
-  status?: T;
-  category?: T;
-  author?: T;
-  sourceUrls?:
-    | T
-    | {
-        url?: T;
-        id?: T;
-      };
-  featuredImage?: T;
-  body?: T;
-  excerpt?: T;
-  embeds?:
-    | T
-    | {
-        platform?: T;
-        embedHtml?: T;
-        caption?: T;
-        insertAfterParagraph?: T;
-        id?: T;
-      };
-  reviewNote?: T;
-  featured?: T;
-  slug?: T;
-  featuredImageUrl?: T;
-  featuredImageAlt?: T;
-  metaTitle?: T;
-  metaDescription?: T;
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
-  publishedAt?: T;
-  publishedDate?: T;
-  confidence?: T;
-  headlineVariants?:
-    | T
-    | {
-        variant?: T;
-        id?: T;
-      };
-  readingTime?: T;
-  articleType?: T;
-  displayOrder?: T;
-  imageOptions?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fe-articles_select".
- */
-export interface FeArticlesSelect<T extends boolean = true> {
   title?: T;
   status?: T;
   category?: T;

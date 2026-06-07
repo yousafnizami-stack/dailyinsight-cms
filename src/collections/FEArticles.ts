@@ -10,7 +10,7 @@ export const FEArticles: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'status', 'category', 'publishedAt'],
+    defaultColumns: ['title', 'status', 'source', 'category', 'publishedAt'],
     listSearchableFields: ['title', 'slug', 'reviewNote'],
     pagination: {
       defaultLimit: 50,
@@ -192,6 +192,19 @@ export const FEArticles: CollectionConfig = {
     {
       name: 'reviewNote',
       type: 'textarea',
+    },
+    {
+      name: 'source',
+      type: 'select',
+      required: false,
+      options: [
+        { label: 'KW Pipeline', value: 'kw-pipeline' },
+        { label: 'RSS Pipeline', value: 'rss-pipeline' },
+      ],
+      admin: {
+        readOnly: true,
+        description: 'Source pipeline this article was promoted from',
+      },
     },
     {
       name: 'featured',

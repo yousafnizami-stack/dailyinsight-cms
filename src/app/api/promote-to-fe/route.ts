@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
 
     const { id: _id, createdAt, updatedAt, ...articleData } = sourceArticle as any
 
-    const pipelineLabel = collectionSlug === 'articles' ? 'KW pipeline' : 'RSS pipeline'
+    const isKw = collectionSlug === 'articles'
+    const pipelineLabel = isKw ? 'KW pipeline' : 'RSS pipeline'
     const reviewNote = (articleData.reviewNote || '') + ` [Promoted from ${pipelineLabel}]`
 
     const promoted = await payload.create({
@@ -31,6 +32,7 @@ export async function POST(req: NextRequest) {
         ...articleData,
         status: 'draft',
         reviewNote,
+        source: isKw ? 'kw-pipeline' : 'rss-pipeline',
       },
     })
 

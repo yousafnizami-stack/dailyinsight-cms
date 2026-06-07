@@ -9,6 +9,7 @@ import * as migration_20260607_131131_add_rss_sources_collection from './2026060
 import * as migration_20260607_132618_add_rss_articles from './20260607_132618_add_rss_articles';
 import * as migration_20260607_151321_add_rss_test_prompt_fields from './20260607_151321_add_rss_test_prompt_fields';
 import * as migration_20260607_205425_add_fe_articles_collection from './20260607_205425_add_fe_articles_collection';
+import * as migration_20260607_214018_add_fe_articles_source_field from './20260607_214018_add_fe_articles_source_field';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20260607_205425_add_fe_articles_collection.up,
     down: migration_20260607_205425_add_fe_articles_collection.down,
-    name: '20260607_205425_add_fe_articles_collection'
+    name: '20260607_205425_add_fe_articles_collection',
+  },
+  {
+    up: migration_20260607_214018_add_fe_articles_source_field.up,
+    down: migration_20260607_214018_add_fe_articles_source_field.down,
+    name: '20260607_214018_add_fe_articles_source_field'
   },
 ];
