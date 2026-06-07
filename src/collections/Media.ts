@@ -1,5 +1,4 @@
 import type { CollectionConfig } from 'payload'
-
 export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
@@ -16,6 +15,14 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
       required: false,
+    },
+    {
+      name: 'caption',
+      type: 'text',
+      required: false,
+      admin: {
+        description: 'Optional caption displayed below the image on the frontend',
+      },
     },
     {
       name: 'title',
