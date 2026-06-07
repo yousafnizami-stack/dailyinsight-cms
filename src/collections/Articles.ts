@@ -17,14 +17,7 @@ export const Articles: CollectionConfig = {
     },
     components: {
       edit: {
-        beforeDocumentControls: [
-          {
-            path: '@/components/ViewOnSiteButton',
-            exportName: 'ViewOnSiteButton',
-            serverProps: { collectionSlug: 'articles' },
-          },
-          '@/components/PromoteToFEButton#PromoteToFEButton',
-        ],
+        beforeDocumentControls: ['@/components/PromoteToFEButton#PromoteToFEButton'],
       },
     },
   },
