@@ -75,6 +75,7 @@ export interface Config {
     authors: Author;
     'used-urls': UsedUrl;
     keywords: Keyword;
+    'rss-sources': RssSource;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +91,7 @@ export interface Config {
     authors: AuthorsSelect<false> | AuthorsSelect<true>;
     'used-urls': UsedUrlsSelect<false> | UsedUrlsSelect<true>;
     keywords: KeywordsSelect<false> | KeywordsSelect<true>;
+    'rss-sources': RssSourcesSelect<false> | RssSourcesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -458,6 +460,22 @@ export interface Keyword {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rss-sources".
+ */
+export interface RssSource {
+  id: number;
+  url: string;
+  category?: ('royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle') | null;
+  weight: number;
+  /**
+   * Uncheck to temporarily disable this source without deleting it
+   */
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -511,6 +529,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'keywords';
         value: number | Keyword;
+      } | null)
+    | ({
+        relationTo: 'rss-sources';
+        value: number | RssSource;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -758,6 +780,18 @@ export interface UsedUrlsSelect<T extends boolean = true> {
 export interface KeywordsSelect<T extends boolean = true> {
   keyword?: T;
   category?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rss-sources_select".
+ */
+export interface RssSourcesSelect<T extends boolean = true> {
+  url?: T;
+  category?: T;
+  weight?: T;
   active?: T;
   updatedAt?: T;
   createdAt?: T;
