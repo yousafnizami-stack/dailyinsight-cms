@@ -17,7 +17,6 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: false,
     },
-    { name: "caption", type: "text", required: false, admin: { description: "Optional caption displayed below the image on the frontend" } },
     {
       name: 'title',
       type: 'text',
