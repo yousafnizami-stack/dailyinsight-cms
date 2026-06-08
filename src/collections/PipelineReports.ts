@@ -2,9 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const PipelineReports: CollectionConfig = {
   slug: 'pipeline-reports',
+  labels: { singular: 'Report', plural: 'Reports' },
   admin: {
     group: 'Pipeline',
-    label: 'Reports',
     useAsTitle: 'runDate',
     defaultColumns: ['type', 'runDate', 'articleSaved', 'skipped'],
   },
