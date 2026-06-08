@@ -10,6 +10,7 @@ import * as migration_20260607_132618_add_rss_articles from './20260607_132618_a
 import * as migration_20260607_151321_add_rss_test_prompt_fields from './20260607_151321_add_rss_test_prompt_fields';
 import * as migration_20260607_205425_add_fe_articles_collection from './20260607_205425_add_fe_articles_collection';
 import * as migration_20260607_214018_add_fe_articles_source_field from './20260607_214018_add_fe_articles_source_field';
+import * as migration_20260608_101443_add_pipeline_reports from './20260608_101443_add_pipeline_reports';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20260607_214018_add_fe_articles_source_field.up,
     down: migration_20260607_214018_add_fe_articles_source_field.down,
-    name: '20260607_214018_add_fe_articles_source_field'
+    name: '20260607_214018_add_fe_articles_source_field',
+  },
+  {
+    up: migration_20260608_101443_add_pipeline_reports.up,
+    down: migration_20260608_101443_add_pipeline_reports.down,
+    name: '20260608_101443_add_pipeline_reports'
   },
 ];
