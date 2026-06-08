@@ -23,6 +23,17 @@ export const RssArticles: CollectionConfig = {
   },
   hooks: {
     beforeChange: [
+      async ({ data }) => {
+        if (!data.slug && data.title) {
+          data.slug = data.title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '') +
+            '-' + Math.floor(Date.now() / 1000)
+        }
+        return data
+      },
       async (args) => {
         const { data, originalDoc } = args
         if (data.status === 'published' && originalDoc?.status !== 'published') {
