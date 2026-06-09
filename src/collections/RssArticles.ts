@@ -15,11 +15,6 @@ export const RssArticles: CollectionConfig = {
       defaultLimit: 50,
       limits: [10, 25, 50, 100],
     },
-    components: {
-      edit: {
-        beforeDocumentControls: ['@/components/PromoteToFEButton#PromoteToFEButton'],
-      },
-    },
   },
   hooks: {
     beforeChange: [

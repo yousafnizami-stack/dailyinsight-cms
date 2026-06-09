@@ -16,7 +16,6 @@ import { UsedUrls } from './collections/UsedUrls'
 import { Keywords } from './collections/Keywords'
 import { RssArticles } from './collections/RssArticles'
 import { RssSources } from './collections/RssSources'
-import { FEArticles } from './collections/FEArticles'
 import { PipelineReports } from './collections/PipelineReports'
 import { PipelinePrompt } from './globals/PipelinePrompt'
 import { PipelineSettings } from './globals/PipelineSettings'
@@ -42,7 +41,7 @@ export default buildConfig({
   serverURL: process.env.PAYLOAD_SERVER_URL || 'https://admin.dailyinsight.co.uk',
   cookiePrefix: 'di',
   csrf: ['https://dailyinsight.co.uk', 'https://admin.dailyinsight.co.uk'],
-  collections: [FEArticles, Users, Media, Articles, TestArticles, Categories, Authors, UsedUrls, Keywords, RssSources, RssArticles, PipelineReports],
+  collections: [Users, Media, Articles, TestArticles, Categories, Authors, UsedUrls, Keywords, RssSources, RssArticles, PipelineReports],
   globals: [PipelinePrompt, PipelineSettings, PipelineTestPrompt],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
