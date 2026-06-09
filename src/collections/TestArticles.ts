@@ -15,11 +15,6 @@ export const TestArticles: CollectionConfig = {
       defaultLimit: 50,
       limits: [10, 25, 50, 100],
     },
-    components: {
-      edit: {
-        beforeDocumentControls: ['@/components/PromoteToArticlesButton#PromoteToArticlesButton'],
-      },
-    },
   },
   hooks: {
     beforeChange: [
