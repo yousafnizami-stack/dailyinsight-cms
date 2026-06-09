@@ -15,6 +15,17 @@ export const TestArticles: CollectionConfig = {
       defaultLimit: 50,
       limits: [10, 25, 50, 100],
     },
+    components: {
+      edit: {
+        beforeDocumentControls: [
+          {
+            path: '@/components/ViewOnSiteButton',
+            exportName: 'ViewOnSiteButton',
+            serverProps: { collectionSlug: 'test-articles' },
+          },
+        ],
+      },
+    },
   },
   hooks: {
     beforeChange: [
