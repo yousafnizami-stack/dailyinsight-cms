@@ -65,7 +65,7 @@ export const FEArticles: CollectionConfig = {
         if (data.featured === true) {
           const { req } = args
           await req.payload.update({
-            collection: 'fe-articles',
+            collection: 'fe-articles' as any,
             where: {
               and: [
                 { featured: { equals: true } },
