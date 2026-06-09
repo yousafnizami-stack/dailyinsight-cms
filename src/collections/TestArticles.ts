@@ -18,6 +18,7 @@ export const TestArticles: CollectionConfig = {
     components: {
       edit: {
         beforeDocumentControls: [
+          '@/components/PromoteToArticlesButton#PromoteToArticlesButton',
           {
             path: '@/components/ViewOnSiteButton',
             exportName: 'ViewOnSiteButton',
