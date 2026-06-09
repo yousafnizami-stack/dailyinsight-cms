@@ -12,6 +12,7 @@ import * as migration_20260607_205425_add_fe_articles_collection from './2026060
 import * as migration_20260607_214018_add_fe_articles_source_field from './20260607_214018_add_fe_articles_source_field';
 import * as migration_20260608_101443_add_pipeline_reports from './20260608_101443_add_pipeline_reports';
 import * as migration_20260609_143313_remove_fe_articles from './20260609_143313_remove_fe_articles';
+import * as migration_20260609_153309_restore_fe_articles_rels from './20260609_153309_restore_fe_articles_rels';
 
 export const migrations = [
   {
@@ -82,6 +83,11 @@ export const migrations = [
   {
     up: migration_20260609_143313_remove_fe_articles.up,
     down: migration_20260609_143313_remove_fe_articles.down,
-    name: '20260609_143313_remove_fe_articles'
+    name: '20260609_143313_remove_fe_articles',
+  },
+  {
+    up: migration_20260609_153309_restore_fe_articles_rels.up,
+    down: migration_20260609_153309_restore_fe_articles_rels.down,
+    name: '20260609_153309_restore_fe_articles_rels'
   },
 ];
