@@ -33,6 +33,9 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
-    adminThumbnail: ({ doc }: { doc: any }) => doc.url as string,
+    adminThumbnail: ({ doc }: { doc: any }) => {
+      const url: string = (doc.url || '') as string
+      return url.replace('/upload/', '/upload/w_400,h_300,c_fill/')
+    },
   },
 }
