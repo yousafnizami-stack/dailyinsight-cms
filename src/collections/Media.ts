@@ -33,20 +33,6 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     disableLocalStorage: true,
-    adminThumbnail: ({ doc }: { doc: any }) => {
-      const url: string = (doc.cloudinaryUrl || doc.url || '') as string
-      if (url.includes('/upload/')) {
-        return url.replace('/upload/', '/upload/w_400,h_300,c_fill/')
-      }
-      return url
-    },
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 400,
-        height: 300,
-        position: 'centre',
-      },
-    ],
+    adminThumbnail: ({ doc }: { doc: any }) => doc.url as string,
   },
 }
