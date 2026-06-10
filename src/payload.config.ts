@@ -41,7 +41,7 @@ export default buildConfig({
   serverURL: process.env.PAYLOAD_SERVER_URL || 'https://admin.dailyinsight.co.uk',
   cookiePrefix: 'di',
   csrf: ['https://dailyinsight.co.uk', 'https://admin.dailyinsight.co.uk'],
-  collections: [Users, Articles, RssArticles, TestArticles, Media, Authors, Categories, Keywords, UsedUrls, RssSources, PipelineReports],
+  collections: [Articles, RssArticles, TestArticles, Media, Authors, Categories, Keywords, UsedUrls, RssSources, PipelineReports, Users],
   globals: [PipelinePrompt, PipelineSettings, PipelineTestPrompt],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
