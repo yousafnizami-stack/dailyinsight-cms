@@ -10,12 +10,16 @@ export async function PATCH(req: NextRequest) {
     if (apiKey !== PIPELINE_SECRET) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const { id, active } = await req.json()
+    const { id, active, keyword, category } = await req.json()
     const payload = await getPayload({ config })
     const result = await payload.update({
       collection: 'keywords',
       id: Number(id),
-      data: { active },
+      data: {
+        ...(active !== undefined && { active }),
+        ...(keyword !== undefined && { keyword }),
+        ...(category !== undefined && { category }),
+      },
       overrideAccess: true,
     })
     return NextResponse.json({ doc: result })
