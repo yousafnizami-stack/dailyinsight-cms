@@ -5,6 +5,7 @@ export const PipelinePrompt: GlobalConfig = {
   label: 'Pipeline Prompt',
   admin: {
     group: 'Pipeline',
+    hidden: true,
   },
   access: {
     read: ({ req }) => {

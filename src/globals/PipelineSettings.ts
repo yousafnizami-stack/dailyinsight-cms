@@ -5,6 +5,7 @@ export const PipelineSettings: GlobalConfig = {
   label: 'Pipeline Settings',
   admin: {
     group: 'Pipeline',
+    hidden: true,
   },
   fields: [
     {

@@ -2,7 +2,7 @@ import type { GlobalConfig } from 'payload'
 export const PipelineTestPrompt: GlobalConfig = {
   slug: 'pipeline-test-prompt',
   label: 'Pipeline Test Prompt',
-  admin: { group: 'Pipeline' },
+  admin: { group: 'Pipeline', hidden: true },
   fields: [
     {
       name: 'systemPrompt',
