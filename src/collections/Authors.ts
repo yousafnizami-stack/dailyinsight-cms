@@ -18,5 +18,6 @@ export const Authors: CollectionConfig = {
     { name: 'role', type: 'text' },
     { name: 'bio', type: 'textarea' },
     { name: 'avatar', type: 'upload', relationTo: 'media' },
+    { name: 'photoUrl', type: 'text', admin: { description: 'Direct Cloudinary image URL for the author photo' } },
   ],
 }

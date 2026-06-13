@@ -14,6 +14,7 @@ import * as migration_20260608_101443_add_pipeline_reports from './20260608_1014
 import * as migration_20260609_143313_remove_fe_articles from './20260609_143313_remove_fe_articles';
 import * as migration_20260609_153309_restore_fe_articles_rels from './20260609_153309_restore_fe_articles_rels';
 import * as migration_20260610_120000_add_other_category from './20260610_120000_add_other_category';
+import * as migration_20260613_120000_add_authors_photo_url_and_seed from './20260613_120000_add_authors_photo_url_and_seed';
 
 export const migrations = [
   {
@@ -95,5 +96,10 @@ export const migrations = [
     up: migration_20260610_120000_add_other_category.up,
     down: migration_20260610_120000_add_other_category.down,
     name: '20260610_120000_add_other_category',
+  },
+  {
+    up: migration_20260613_120000_add_authors_photo_url_and_seed.up,
+    down: migration_20260613_120000_add_authors_photo_url_and_seed.down,
+    name: '20260613_120000_add_authors_photo_url_and_seed',
   },
 ];
