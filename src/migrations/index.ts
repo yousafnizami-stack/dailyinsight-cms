@@ -16,6 +16,7 @@ import * as migration_20260609_153309_restore_fe_articles_rels from './20260609_
 import * as migration_20260610_120000_add_other_category from './20260610_120000_add_other_category';
 import * as migration_20260613_085323_add_author_ref_field from './20260613_085323_add_author_ref_field';
 import * as migration_20260613_120000_add_authors_photo_url_and_seed from './20260613_120000_add_authors_photo_url_and_seed';
+import * as migration_20260613_130522_remove_author_ref from './20260613_130522_remove_author_ref';
 
 export const migrations = [
   {
@@ -106,6 +107,11 @@ export const migrations = [
   {
     up: migration_20260613_120000_add_authors_photo_url_and_seed.up,
     down: migration_20260613_120000_add_authors_photo_url_and_seed.down,
-    name: '20260613_120000_add_authors_photo_url_and_seed'
+    name: '20260613_120000_add_authors_photo_url_and_seed',
+  },
+  {
+    up: migration_20260613_130522_remove_author_ref.up,
+    down: migration_20260613_130522_remove_author_ref.down,
+    name: '20260613_130522_remove_author_ref'
   },
 ];

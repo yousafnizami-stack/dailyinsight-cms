@@ -165,12 +165,14 @@ export interface Article {
         | 'news-desk'
         | 'celebrity-desk'
         | 'royal-family-desk'
+        | 'sophie-marshall'
+        | 'james-okafor'
+        | 'claire-dennison'
+        | 'tom-everett'
+        | 'rachel-hinds'
+        | 'priya-nair'
       )
     | null;
-  /**
-   * Select a named author — overrides the desk byline if set
-   */
-  authorRef?: (number | null) | Author;
   sourceUrls?:
     | {
         url?: string | null;
@@ -263,24 +265,6 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "authors".
- */
-export interface Author {
-  id: number;
-  name: string;
-  slug: string;
-  role?: string | null;
-  bio?: string | null;
-  avatar?: (number | null) | Media;
-  /**
-   * Direct Cloudinary image URL for the author photo
-   */
-  photoUrl?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
@@ -341,12 +325,14 @@ export interface RssArticle {
         | 'news-desk'
         | 'celebrity-desk'
         | 'royal-family-desk'
+        | 'sophie-marshall'
+        | 'james-okafor'
+        | 'claire-dennison'
+        | 'tom-everett'
+        | 'rachel-hinds'
+        | 'priya-nair'
       )
     | null;
-  /**
-   * Select a named author — overrides the desk byline if set
-   */
-  authorRef?: (number | null) | Author;
   sourceUrls?:
     | {
         url?: string | null;
@@ -446,12 +432,14 @@ export interface TestArticle {
         | 'web-desk'
         | 'news-desk'
         | 'celebrity-desk'
+        | 'sophie-marshall'
+        | 'james-okafor'
+        | 'claire-dennison'
+        | 'tom-everett'
+        | 'rachel-hinds'
+        | 'priya-nair'
       )
     | null;
-  /**
-   * Select a named author — overrides the desk byline if set
-   */
-  authorRef?: (number | null) | Author;
   sourceUrls?:
     | {
         url?: string | null;
@@ -524,6 +512,24 @@ export interface TestArticle {
     | number
     | boolean
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "authors".
+ */
+export interface Author {
+  id: number;
+  name: string;
+  slug: string;
+  role?: string | null;
+  bio?: string | null;
+  avatar?: (number | null) | Media;
+  /**
+   * Direct Cloudinary image URL for the author photo
+   */
+  photoUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -791,7 +797,6 @@ export interface ArticlesSelect<T extends boolean = true> {
   status?: T;
   category?: T;
   author?: T;
-  authorRef?: T;
   sourceUrls?:
     | T
     | {
@@ -848,7 +853,6 @@ export interface RssArticlesSelect<T extends boolean = true> {
   status?: T;
   category?: T;
   author?: T;
-  authorRef?: T;
   sourceUrls?:
     | T
     | {
@@ -905,7 +909,6 @@ export interface TestArticlesSelect<T extends boolean = true> {
   status?: T;
   category?: T;
   author?: T;
-  authorRef?: T;
   sourceUrls?:
     | T
     | {
