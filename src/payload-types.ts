@@ -67,18 +67,17 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
-    media: Media;
     articles: Article;
-    'test-articles': TestArticle;
-    categories: Category;
-    authors: Author;
-    'used-urls': UsedUrl;
-    keywords: Keyword;
-    'rss-sources': RssSource;
     'rss-articles': RssArticle;
+    'test-articles': TestArticle;
+    media: Media;
+    authors: Author;
+    categories: Category;
+    keywords: Keyword;
+    'used-urls': UsedUrl;
+    'rss-sources': RssSource;
     'pipeline-reports': PipelineReport;
-    'fe-articles': FeArticle;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,18 +85,17 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
-    'test-articles': TestArticlesSelect<false> | TestArticlesSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    authors: AuthorsSelect<false> | AuthorsSelect<true>;
-    'used-urls': UsedUrlsSelect<false> | UsedUrlsSelect<true>;
-    keywords: KeywordsSelect<false> | KeywordsSelect<true>;
-    'rss-sources': RssSourcesSelect<false> | RssSourcesSelect<true>;
     'rss-articles': RssArticlesSelect<false> | RssArticlesSelect<true>;
+    'test-articles': TestArticlesSelect<false> | TestArticlesSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    authors: AuthorsSelect<false> | AuthorsSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    keywords: KeywordsSelect<false> | KeywordsSelect<true>;
+    'used-urls': UsedUrlsSelect<false> | UsedUrlsSelect<true>;
+    'rss-sources': RssSourcesSelect<false> | RssSourcesSelect<true>;
     'pipeline-reports': PipelineReportsSelect<false> | PipelineReportsSelect<true>;
-    'fe-articles': FeArticlesSelect<false> | FeArticlesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -147,72 +145,6 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt?: string | null;
-  /**
-   * Optional caption displayed below the image on the frontend
-   */
-  caption?: string | null;
-  title?: string | null;
-  cloudinaryPublicId?: string | null;
-  cloudinaryUrl?: string | null;
-  cloudinaryResourceType?: string | null;
-  cloudinaryFormat?: string | null;
-  cloudinaryVersion?: number | null;
-  /**
-   * Direct URL to the original file without transformations
-   */
-  originalUrl?: string | null;
-  /**
-   * URL with applied transformations
-   */
-  transformedUrl?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  /**
-   * File size in bytes
-   */
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles".
  */
 export interface Article {
@@ -235,6 +167,10 @@ export interface Article {
         | 'royal-family-desk'
       )
     | null;
+  /**
+   * Select a named author — overrides the desk byline if set
+   */
+  authorRef?: (number | null) | Author;
   sourceUrls?:
     | {
         url?: string | null;
@@ -327,104 +263,6 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "test-articles".
- */
-export interface TestArticle {
-  id: number;
-  title: string;
-  status: 'draft' | 'published';
-  category?: (number | null) | Category;
-  /**
-   * Byline shown on article page
-   */
-  author?:
-    | (
-        | 'di-royal-reporter'
-        | 'di-entertainment-desk'
-        | 'di-music-desk'
-        | 'di-film-desk'
-        | 'web-desk'
-        | 'news-desk'
-        | 'celebrity-desk'
-      )
-    | null;
-  sourceUrls?:
-    | {
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  featuredImage?: (number | null) | Media;
-  body?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  excerpt?: string | null;
-  embeds?:
-    | {
-        platform?: string | null;
-        embedHtml?: string | null;
-        caption?: string | null;
-        insertAfterParagraph?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  reviewNote?: string | null;
-  /**
-   * Pin this article to the top of the homepage
-   */
-  featured?: boolean | null;
-  slug: string;
-  featuredImageUrl?: string | null;
-  featuredImageAlt?: string | null;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  tags?:
-    | {
-        tag?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  publishedAt?: string | null;
-  publishedDate?: string | null;
-  confidence?: number | null;
-  headlineVariants?:
-    | {
-        variant?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  readingTime?: number | null;
-  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
-  /**
-   * Lower numbers appear first. Leave blank for default ordering.
-   */
-  displayOrder?: number | null;
-  imageOptions?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "authors".
  */
 export interface Author {
@@ -434,51 +272,52 @@ export interface Author {
   role?: string | null;
   bio?: string | null;
   avatar?: (number | null) | Media;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "used-urls".
- */
-export interface UsedUrl {
-  id: number;
-  url: string;
-  keyword?: string | null;
-  expiresAt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "keywords".
- */
-export interface Keyword {
-  id: number;
-  keyword: string;
-  category: 'royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle';
   /**
-   * Uncheck to temporarily disable this keyword without deleting it
+   * Direct Cloudinary image URL for the author photo
    */
-  active?: boolean | null;
+  photoUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rss-sources".
+ * via the `definition` "media".
  */
-export interface RssSource {
+export interface Media {
   id: number;
-  url: string;
-  category?: ('royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle') | null;
-  weight: number;
+  alt?: string | null;
   /**
-   * Uncheck to temporarily disable this source without deleting it
+   * Optional caption displayed below the image on the frontend
    */
-  active?: boolean | null;
+  caption?: string | null;
+  title?: string | null;
+  cloudinaryPublicId?: string | null;
+  cloudinaryUrl?: string | null;
+  cloudinaryResourceType?: string | null;
+  cloudinaryFormat?: string | null;
+  cloudinaryVersion?: number | null;
+  /**
+   * Direct URL to the original file without transformations
+   */
+  originalUrl?: string | null;
+  /**
+   * URL with applied transformations
+   */
+  transformedUrl?: string | null;
   updatedAt: string;
   createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  /**
+   * File size in bytes
+   */
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -504,6 +343,10 @@ export interface RssArticle {
         | 'royal-family-desk'
       )
     | null;
+  /**
+   * Select a named author — overrides the desk byline if set
+   */
+  authorRef?: (number | null) | Author;
   sourceUrls?:
     | {
         url?: string | null;
@@ -579,6 +422,151 @@ export interface RssArticle {
     | number
     | boolean
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "test-articles".
+ */
+export interface TestArticle {
+  id: number;
+  title: string;
+  status: 'draft' | 'published';
+  category?: (number | null) | Category;
+  /**
+   * Byline shown on article page
+   */
+  author?:
+    | (
+        | 'di-royal-reporter'
+        | 'di-entertainment-desk'
+        | 'di-music-desk'
+        | 'di-film-desk'
+        | 'web-desk'
+        | 'news-desk'
+        | 'celebrity-desk'
+      )
+    | null;
+  /**
+   * Select a named author — overrides the desk byline if set
+   */
+  authorRef?: (number | null) | Author;
+  sourceUrls?:
+    | {
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  excerpt?: string | null;
+  embeds?:
+    | {
+        platform?: string | null;
+        embedHtml?: string | null;
+        caption?: string | null;
+        insertAfterParagraph?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  reviewNote?: string | null;
+  /**
+   * Pin this article to the top of the homepage
+   */
+  featured?: boolean | null;
+  slug: string;
+  featuredImageUrl?: string | null;
+  featuredImageAlt?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  publishedAt?: string | null;
+  publishedDate?: string | null;
+  confidence?: number | null;
+  headlineVariants?:
+    | {
+        variant?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  readingTime?: number | null;
+  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
+  /**
+   * Lower numbers appear first. Leave blank for default ordering.
+   */
+  displayOrder?: number | null;
+  imageOptions?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "keywords".
+ */
+export interface Keyword {
+  id: number;
+  keyword: string;
+  category: 'royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle';
+  /**
+   * Uncheck to temporarily disable this keyword without deleting it
+   */
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "used-urls".
+ */
+export interface UsedUrl {
+  id: number;
+  url: string;
+  keyword?: string | null;
+  expiresAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rss-sources".
+ */
+export interface RssSource {
+  id: number;
+  url: string;
+  category?: ('royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle') | null;
+  weight: number;
+  /**
+   * Uncheck to temporarily disable this source without deleting it
+   */
+  active?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -660,105 +648,29 @@ export interface PipelineReport {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fe-articles".
+ * via the `definition` "users".
  */
-export interface FeArticle {
+export interface User {
   id: number;
-  title: string;
-  status: 'draft' | 'published';
-  category?: (number | null) | Category;
-  /**
-   * Byline shown on article page
-   */
-  author?:
-    | (
-        | 'di-royal-reporter'
-        | 'di-entertainment-desk'
-        | 'di-music-desk'
-        | 'di-film-desk'
-        | 'web-desk'
-        | 'news-desk'
-        | 'celebrity-desk'
-        | 'royal-family-desk'
-      )
-    | null;
-  sourceUrls?:
-    | {
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  featuredImage?: (number | null) | Media;
-  body?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Keep under 200 characters — shown in article previews and social sharing.
-   */
-  excerpt?: string | null;
-  embeds?:
-    | {
-        platform?: string | null;
-        embedHtml?: string | null;
-        caption?: string | null;
-        insertAfterParagraph?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  reviewNote?: string | null;
-  /**
-   * Pin this article to the top of the homepage
-   */
-  featured?: boolean | null;
-  slug: string;
-  featuredImageUrl?: string | null;
-  featuredImageAlt?: string | null;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  tags?:
-    | {
-        tag?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  publishedAt?: string | null;
-  publishedDate?: string | null;
-  confidence?: number | null;
-  headlineVariants?:
-    | {
-        variant?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  readingTime?: number | null;
-  articleType?: ('news' | 'listicle' | 'profile' | 'explainer' | 'timeline' | 'developing') | null;
-  /**
-   * Lower numbers appear first. Leave blank for default ordering.
-   */
-  displayOrder?: number | null;
-  imageOptions?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
+  name?: string | null;
   updatedAt: string;
   createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -785,52 +697,48 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
         relationTo: 'articles';
         value: number | Article;
-      } | null)
-    | ({
-        relationTo: 'test-articles';
-        value: number | TestArticle;
-      } | null)
-    | ({
-        relationTo: 'categories';
-        value: number | Category;
-      } | null)
-    | ({
-        relationTo: 'authors';
-        value: number | Author;
-      } | null)
-    | ({
-        relationTo: 'used-urls';
-        value: number | UsedUrl;
-      } | null)
-    | ({
-        relationTo: 'keywords';
-        value: number | Keyword;
-      } | null)
-    | ({
-        relationTo: 'rss-sources';
-        value: number | RssSource;
       } | null)
     | ({
         relationTo: 'rss-articles';
         value: number | RssArticle;
       } | null)
     | ({
+        relationTo: 'test-articles';
+        value: number | TestArticle;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'authors';
+        value: number | Author;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'keywords';
+        value: number | Keyword;
+      } | null)
+    | ({
+        relationTo: 'used-urls';
+        value: number | UsedUrl;
+      } | null)
+    | ({
+        relationTo: 'rss-sources';
+        value: number | RssSource;
+      } | null)
+    | ({
         relationTo: 'pipeline-reports';
         value: number | PipelineReport;
       } | null)
     | ({
-        relationTo: 'fe-articles';
-        value: number | FeArticle;
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -876,56 +784,6 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  caption?: T;
-  title?: T;
-  cloudinaryPublicId?: T;
-  cloudinaryUrl?: T;
-  cloudinaryResourceType?: T;
-  cloudinaryFormat?: T;
-  cloudinaryVersion?: T;
-  originalUrl?: T;
-  transformedUrl?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
@@ -933,6 +791,64 @@ export interface ArticlesSelect<T extends boolean = true> {
   status?: T;
   category?: T;
   author?: T;
+  authorRef?: T;
+  sourceUrls?:
+    | T
+    | {
+        url?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  body?: T;
+  excerpt?: T;
+  embeds?:
+    | T
+    | {
+        platform?: T;
+        embedHtml?: T;
+        caption?: T;
+        insertAfterParagraph?: T;
+        id?: T;
+      };
+  reviewNote?: T;
+  featured?: T;
+  slug?: T;
+  featuredImageUrl?: T;
+  featuredImageAlt?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  publishedAt?: T;
+  publishedDate?: T;
+  confidence?: T;
+  headlineVariants?:
+    | T
+    | {
+        variant?: T;
+        id?: T;
+      };
+  readingTime?: T;
+  articleType?: T;
+  displayOrder?: T;
+  imageOptions?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rss-articles_select".
+ */
+export interface RssArticlesSelect<T extends boolean = true> {
+  title?: T;
+  status?: T;
+  category?: T;
+  author?: T;
+  authorRef?: T;
   sourceUrls?:
     | T
     | {
@@ -989,6 +905,7 @@ export interface TestArticlesSelect<T extends boolean = true> {
   status?: T;
   category?: T;
   author?: T;
+  authorRef?: T;
   sourceUrls?:
     | T
     | {
@@ -1033,6 +950,47 @@ export interface TestArticlesSelect<T extends boolean = true> {
   articleType?: T;
   displayOrder?: T;
   imageOptions?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  title?: T;
+  cloudinaryPublicId?: T;
+  cloudinaryUrl?: T;
+  cloudinaryResourceType?: T;
+  cloudinaryFormat?: T;
+  cloudinaryVersion?: T;
+  originalUrl?: T;
+  transformedUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "authors_select".
+ */
+export interface AuthorsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  role?: T;
+  bio?: T;
+  avatar?: T;
+  photoUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1049,14 +1007,12 @@ export interface CategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "authors_select".
+ * via the `definition` "keywords_select".
  */
-export interface AuthorsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  role?: T;
-  bio?: T;
-  avatar?: T;
+export interface KeywordsSelect<T extends boolean = true> {
+  keyword?: T;
+  category?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1073,17 +1029,6 @@ export interface UsedUrlsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "keywords_select".
- */
-export interface KeywordsSelect<T extends boolean = true> {
-  keyword?: T;
-  category?: T;
-  active?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "rss-sources_select".
  */
 export interface RssSourcesSelect<T extends boolean = true> {
@@ -1091,62 +1036,6 @@ export interface RssSourcesSelect<T extends boolean = true> {
   category?: T;
   weight?: T;
   active?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rss-articles_select".
- */
-export interface RssArticlesSelect<T extends boolean = true> {
-  title?: T;
-  status?: T;
-  category?: T;
-  author?: T;
-  sourceUrls?:
-    | T
-    | {
-        url?: T;
-        id?: T;
-      };
-  featuredImage?: T;
-  body?: T;
-  excerpt?: T;
-  embeds?:
-    | T
-    | {
-        platform?: T;
-        embedHtml?: T;
-        caption?: T;
-        insertAfterParagraph?: T;
-        id?: T;
-      };
-  reviewNote?: T;
-  featured?: T;
-  slug?: T;
-  featuredImageUrl?: T;
-  featuredImageAlt?: T;
-  metaTitle?: T;
-  metaDescription?: T;
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
-  publishedAt?: T;
-  publishedDate?: T;
-  confidence?: T;
-  headlineVariants?:
-    | T
-    | {
-        variant?: T;
-        id?: T;
-      };
-  readingTime?: T;
-  articleType?: T;
-  displayOrder?: T;
-  imageOptions?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1172,59 +1061,26 @@ export interface PipelineReportsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fe-articles_select".
+ * via the `definition` "users_select".
  */
-export interface FeArticlesSelect<T extends boolean = true> {
-  title?: T;
-  status?: T;
-  category?: T;
-  author?: T;
-  sourceUrls?:
-    | T
-    | {
-        url?: T;
-        id?: T;
-      };
-  featuredImage?: T;
-  body?: T;
-  excerpt?: T;
-  embeds?:
-    | T
-    | {
-        platform?: T;
-        embedHtml?: T;
-        caption?: T;
-        insertAfterParagraph?: T;
-        id?: T;
-      };
-  reviewNote?: T;
-  featured?: T;
-  slug?: T;
-  featuredImageUrl?: T;
-  featuredImageAlt?: T;
-  metaTitle?: T;
-  metaDescription?: T;
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
-  publishedAt?: T;
-  publishedDate?: T;
-  confidence?: T;
-  headlineVariants?:
-    | T
-    | {
-        variant?: T;
-        id?: T;
-      };
-  readingTime?: T;
-  articleType?: T;
-  displayOrder?: T;
-  imageOptions?: T;
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
