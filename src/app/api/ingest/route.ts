@@ -16,10 +16,12 @@ function htmlToLexical(html: string) {
     } else if (tag === 'blockquote') {
       nodes.push({ type: 'quote', children: [{ type: 'text', text: cleanText, version: 1 }], direction: 'ltr', format: '', indent: 0, version: 1 })
     } else {
-      const parts = inner.split(/(<strong>[\s\S]*?<\/strong>)/gi)
+      const parts = inner.split(/(<strong>[\s\S]*?<\/strong>|<a\s[^>]*href[^>]*>[\s\S]*?<\/a>)/gi)
       const children = parts.filter(p => p).map(part => {
         const boldMatch = part.match(/^<strong>([\s\S]*?)<\/strong>$/i)
         if (boldMatch) return { type: 'text', text: boldMatch[1].replace(/<[^>]+>/g, ''), format: 1, version: 1 }
+        const linkMatch = part.match(/^<a\s[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>$/i)
+        if (linkMatch) return { type: 'link', fields: { url: linkMatch[1] }, children: [{ type: 'text', text: linkMatch[2].replace(/<[^>]+>/g, ''), version: 1 }], version: 1 }
         const text = part.replace(/<[^>]+>/g, '')
         return text ? { type: 'text', text, format: 0, version: 1 } : null
       }).filter(Boolean)
