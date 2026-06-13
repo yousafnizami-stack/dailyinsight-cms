@@ -24,6 +24,7 @@ export const TestArticles: CollectionConfig = {
             exportName: 'ViewOnSiteButton',
             serverProps: { collectionSlug: 'test-articles' },
           },
+          '@/components/WordCountDisplay#WordCountDisplay',
         ],
       },
     },
