@@ -23,6 +23,7 @@ export const RssArticles: CollectionConfig = {
             exportName: 'ViewOnSiteButton',
             serverProps: { collectionSlug: 'rss-articles' },
           },
+          '@/components/WordCountDisplay#WordCountDisplay',
         ],
       },
     },
