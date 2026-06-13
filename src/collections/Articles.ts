@@ -17,10 +17,7 @@ export const Articles: CollectionConfig = {
     },
     components: {
       edit: {
-        beforeDocumentControls: [
-          '@/components/ViewOnSiteButton#ViewOnSiteButton',
-          '@/components/WordCountDisplay#WordCountDisplay',
-        ],
+        beforeDocumentControls: ['@/components/ViewOnSiteButton#ViewOnSiteButton'],
       },
     },
   },
