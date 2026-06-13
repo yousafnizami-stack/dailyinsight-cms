@@ -17,6 +17,7 @@ import * as migration_20260610_120000_add_other_category from './20260610_120000
 import * as migration_20260613_085323_add_author_ref_field from './20260613_085323_add_author_ref_field';
 import * as migration_20260613_120000_add_authors_photo_url_and_seed from './20260613_120000_add_authors_photo_url_and_seed';
 import * as migration_20260613_130522_remove_author_ref from './20260613_130522_remove_author_ref';
+import * as migration_20260613_164920_add_named_authors_to_enum from './20260613_164920_add_named_authors_to_enum';
 
 export const migrations = [
   {
@@ -112,6 +113,11 @@ export const migrations = [
   {
     up: migration_20260613_130522_remove_author_ref.up,
     down: migration_20260613_130522_remove_author_ref.down,
-    name: '20260613_130522_remove_author_ref'
+    name: '20260613_130522_remove_author_ref',
+  },
+  {
+    up: migration_20260613_164920_add_named_authors_to_enum.up,
+    down: migration_20260613_164920_add_named_authors_to_enum.down,
+    name: '20260613_164920_add_named_authors_to_enum'
   },
 ];
