@@ -140,7 +140,6 @@ export const RssArticles: CollectionConfig = {
       hasMany: false,
       required: false,
       admin: {
-        label: 'Author (Named)',
         description: 'Select a named author — overrides the desk byline if set',
       },
     },
