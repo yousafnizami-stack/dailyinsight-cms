@@ -88,6 +88,12 @@ export const TestArticles: CollectionConfig = {
         { label: 'Web Desk', value: 'web-desk' },
         { label: 'News Desk', value: 'news-desk' },
         { label: 'Celebrity Desk', value: 'celebrity-desk' },
+        { label: 'Sophie Marshall', value: 'sophie-marshall' },
+        { label: 'James Okafor', value: 'james-okafor' },
+        { label: 'Claire Dennison', value: 'claire-dennison' },
+        { label: 'Tom Everett', value: 'tom-everett' },
+        { label: 'Rachel Hinds', value: 'rachel-hinds' },
+        { label: 'Priya Nair', value: 'priya-nair' },
       ],
     },
     {

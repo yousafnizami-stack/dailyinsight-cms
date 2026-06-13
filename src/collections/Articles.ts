@@ -142,6 +142,12 @@ export const Articles: CollectionConfig = {
         { label: 'News Desk', value: 'news-desk' },
         { label: 'Celebrity Desk', value: 'celebrity-desk' },
         { label: 'Royal Family News Desk', value: 'royal-family-desk' },
+        { label: 'Sophie Marshall', value: 'sophie-marshall' },
+        { label: 'James Okafor', value: 'james-okafor' },
+        { label: 'Claire Dennison', value: 'claire-dennison' },
+        { label: 'Tom Everett', value: 'tom-everett' },
+        { label: 'Rachel Hinds', value: 'rachel-hinds' },
+        { label: 'Priya Nair', value: 'priya-nair' },
       ],
     },
     {
