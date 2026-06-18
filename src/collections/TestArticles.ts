@@ -145,6 +145,7 @@ export const TestArticles: CollectionConfig = {
     {
       name: 'embeds',
       type: 'array',
+      admin: { hidden: true },
       fields: [
         { name: 'platform', type: 'text' },
         { name: 'embedHtml', type: 'textarea' },
