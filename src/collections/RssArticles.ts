@@ -1,4 +1,6 @@
 import type { CollectionConfig } from 'payload'
+import { lexicalEditor, BlocksFeature, UploadFeature } from '@payloadcms/richtext-lexical'
+import { EmbedBlockConfig } from '../blocks/EmbedBlock'
 export const RssArticles: CollectionConfig = {
   slug: 'rss-articles',
   labels: { singular: 'RSS Article', plural: 'RSS Articles' },
@@ -176,6 +178,13 @@ export const RssArticles: CollectionConfig = {
     {
       name: 'body',
       type: 'richText',
+      editor: lexicalEditor({
+        features: ({ defaultFeatures }) => [
+          ...defaultFeatures,
+          UploadFeature({ collections: { media: { fields: [] } } }),
+          BlocksFeature({ blocks: [EmbedBlockConfig] }),
+        ],
+      }),
     },
     {
       name: 'excerpt',
