@@ -10,8 +10,22 @@ export async function PATCH(req: NextRequest) {
     if (apiKey !== PIPELINE_SECRET) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const { id, active, keyword, category } = await req.json()
+    const body = await req.json()
+    const { ids, id, active, keyword, category } = body
     const payload = await getPayload({ config })
+
+    // Bulk update: single where-clause query for all IDs
+    if (Array.isArray(ids) && ids.length > 0) {
+      const result = await payload.update({
+        collection: 'keywords',
+        where: { id: { in: ids.map(Number) } },
+        data: { ...(active !== undefined && { active }) },
+        overrideAccess: true,
+      })
+      return NextResponse.json({ docs: result.docs })
+    }
+
+    // Single update
     const result = await payload.update({
       collection: 'keywords',
       id: Number(id),
