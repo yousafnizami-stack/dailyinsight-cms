@@ -7,7 +7,7 @@ export async function GET() {
     const payload = await getPayload({ config })
     const result = await payload.find({
       collection: 'keywords',
-      limit: 200,
+      limit: 0,
       sort: 'category',
     })
     const keywords = result.docs.map(doc => ({
