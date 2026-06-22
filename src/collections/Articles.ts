@@ -216,6 +216,14 @@ export const Articles: CollectionConfig = {
       ],
     },
     {
+      name: 'captionSuggestion',
+      type: 'textarea',
+      label: 'Caption Suggestions',
+      admin: {
+        description: 'AI-suggested captions for scraped images based on article context. Use as a starting point — verify accuracy before applying.',
+      },
+    },
+    {
       name: 'reviewNote',
       type: 'textarea',
     },
