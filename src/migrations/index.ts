@@ -19,6 +19,7 @@ import * as migration_20260613_120000_add_authors_photo_url_and_seed from './202
 import * as migration_20260613_130522_remove_author_ref from './20260613_130522_remove_author_ref';
 import * as migration_20260613_164920_add_named_authors_to_enum from './20260613_164920_add_named_authors_to_enum';
 import * as migration_20260613_175046_fix_migration_batch_numbers from './20260613_175046_fix_migration_batch_numbers';
+import * as migration_20260627_add_filter_keywords_to_rss_sources from './20260627_add_filter_keywords_to_rss_sources';
 
 export const migrations = [
   {
@@ -124,6 +125,11 @@ export const migrations = [
   {
     up: migration_20260613_175046_fix_migration_batch_numbers.up,
     down: migration_20260613_175046_fix_migration_batch_numbers.down,
-    name: '20260613_175046_fix_migration_batch_numbers'
+    name: '20260613_175046_fix_migration_batch_numbers',
+  },
+  {
+    up: migration_20260627_add_filter_keywords_to_rss_sources.up,
+    down: migration_20260627_add_filter_keywords_to_rss_sources.down,
+    name: '20260627_add_filter_keywords_to_rss_sources',
   },
 ];
