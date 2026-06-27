@@ -41,6 +41,15 @@ export const RssSources: CollectionConfig = {
       ],
     },
     {
+      name: 'filterKeywords',
+      type: 'textarea',
+      required: false,
+      label: 'Filter keywords',
+      admin: {
+        description: 'Comma-separated keywords matched against RSS item URLs and titles. Only items containing at least one keyword will be processed. Leave blank to process all items. Example: andrew, beatrice, eugenie, fergie',
+      },
+    },
+    {
       name: 'weight',
       type: 'number',
       required: true,
