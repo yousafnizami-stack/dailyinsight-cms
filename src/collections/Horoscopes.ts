@@ -15,7 +15,7 @@ export const Horoscopes: CollectionConfig = {
       name: "signs",
       type: "array",
       fields: [
-        { name: "sign", type: "select", options: ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"] },
+        { name: "sign", type: "text" },
         { name: "reading", type: "textarea" },
         { name: "love", type: "number" },
         { name: "career", type: "number" },
