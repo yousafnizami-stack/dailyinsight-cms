@@ -18,7 +18,6 @@ import { RssArticles } from './collections/RssArticles'
 import { RssSources } from './collections/RssSources'
 import { RssCategoryKeywords } from './collections/RssCategoryKeywords'
 import { PipelineReports } from './collections/PipelineReports'
-import { Horoscopes } from './collections/Horoscopes'
 import { PipelinePrompt } from './globals/PipelinePrompt'
 import { PipelineSettings } from './globals/PipelineSettings'
 import { PipelineTestPrompt } from './globals/PipelineTestPrompt'
@@ -43,7 +42,7 @@ export default buildConfig({
   serverURL: process.env.PAYLOAD_SERVER_URL || 'https://admin.dailyinsight.co.uk',
   cookiePrefix: 'di',
   csrf: ['https://dailyinsight.co.uk', 'https://admin.dailyinsight.co.uk'],
-  collections: [Articles, RssArticles, TestArticles, Media, Authors, Categories, Keywords, UsedUrls, RssSources, RssCategoryKeywords, PipelineReports, Horoscopes, Users],
+  collections: [Articles, RssArticles, TestArticles, Media, Authors, Categories, Keywords, UsedUrls, RssSources, RssCategoryKeywords, PipelineReports, Users],
   globals: [PipelinePrompt, PipelineSettings, PipelineTestPrompt],
   editor: lexicalEditor({
     features: ({ defaultFeatures }) => [
