@@ -4,8 +4,8 @@ export const Horoscopes: CollectionConfig = {
   slug: "horoscopes",
   access: {
     read: () => true,
-    create: ({ req }) => Boolean(req.user || req.headers.get("x-api-key") === process.env.PAYLOAD_SECRET),
-    update: ({ req }) => Boolean(req.user || req.headers.get("x-api-key") === process.env.PAYLOAD_SECRET),
+    create: ({ req }) => Boolean(req.user || req.headers.get("x-api-key") === process.env.PIPELINE_SECRET),
+    update: ({ req }) => Boolean(req.user || req.headers.get("x-api-key") === process.env.PIPELINE_SECRET),
     delete: ({ req }) => Boolean(req.user),
   },
   fields: [
