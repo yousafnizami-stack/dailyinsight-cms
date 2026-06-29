@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
       public_id: `dailyinsight/${filename}-${Date.now()}`,
       overwrite: false,
       resource_type: 'image',
+      quality: 'auto',
+      fetch_format: 'auto',
     })
     console.log('Cloudinary upload success:', uploadResult.secure_url)
 
