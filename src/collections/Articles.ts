@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, BlocksFeature, UploadFeature } from '@payloadcms/richtext-lexical'
 import { EmbedBlockConfig } from '../blocks/EmbedBlock'
+import { CarouselBlockConfig } from '../blocks/CarouselBlock'
 export const Articles: CollectionConfig = {
   slug: 'articles',
   labels: { singular: 'KW Article', plural: 'KW Articles' },
@@ -202,7 +203,7 @@ export const Articles: CollectionConfig = {
         features: ({ defaultFeatures }) => [
           ...defaultFeatures,
           UploadFeature({ collections: { media: { fields: [] } } }),
-          BlocksFeature({ blocks: [EmbedBlockConfig] }),
+          BlocksFeature({ blocks: [EmbedBlockConfig, CarouselBlockConfig] }),
         ],
       }),
     },
