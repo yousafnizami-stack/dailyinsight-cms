@@ -153,6 +153,15 @@ export const Articles: CollectionConfig = {
       ],
     },
     {
+      name: 'articleUrl',
+      type: 'ui',
+      admin: {
+        components: {
+          Field: '@/components/ArticleUrlField#ArticleUrlField',
+        },
+      },
+    },
+    {
       name: 'sourceUrls',
       type: 'array',
       fields: [
