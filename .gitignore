@@ -48,3 +48,4 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+scripts/create-julia-roberts-carousel.mjs
