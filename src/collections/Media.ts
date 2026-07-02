@@ -35,5 +35,11 @@ export const Media: CollectionConfig = {
   upload: {
     disableLocalStorage: true,
     adminThumbnail: ({ doc }: { doc: any }) => doc.url as string,
+    // Allows creating a Media doc that references an already-uploaded Cloudinary asset
+    // (cloudinaryPublicId/cloudinaryUrl set directly) without attaching a file to the
+    // request — used by the Carousel Pipeline, whose images are uploaded to Cloudinary
+    // by the PMS before this collection is ever touched. Without this, Payload's shared
+    // create operation throws MissingFile for both Local API and REST calls alike.
+    filesRequiredOnCreate: false,
   },
 }
