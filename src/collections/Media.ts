@@ -9,6 +9,7 @@ export const Media: CollectionConfig = {
   },
   access: {
     read: () => true,
+    create: ({ req }) => Boolean(req.user || req.headers.get("x-api-key") === process.env.PIPELINE_SECRET),
     update: ({ req: { user } }) => Boolean(user),
   },
   fields: [
