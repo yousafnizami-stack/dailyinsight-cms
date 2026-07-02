@@ -22,6 +22,7 @@ import * as migration_20260613_175046_fix_migration_batch_numbers from './202606
 import * as migration_20260627_add_filter_keywords_to_rss_sources from './20260627_add_filter_keywords_to_rss_sources';
 import * as migration_20260627_add_rss_category_keywords from './20260627_add_rss_category_keywords';
 import * as migration_20260702_120000_add_carousel_system_prompt_field from './20260702_120000_add_carousel_system_prompt_field';
+import * as migration_20260702_130000_add_carousel_pipeline_report_type from './20260702_130000_add_carousel_pipeline_report_type';
 
 export const migrations = [
   {
@@ -143,5 +144,10 @@ export const migrations = [
     up: migration_20260702_120000_add_carousel_system_prompt_field.up,
     down: migration_20260702_120000_add_carousel_system_prompt_field.down,
     name: '20260702_120000_add_carousel_system_prompt_field',
+  },
+  {
+    up: migration_20260702_130000_add_carousel_pipeline_report_type.up,
+    down: migration_20260702_130000_add_carousel_pipeline_report_type.down,
+    name: '20260702_130000_add_carousel_pipeline_report_type',
   },
 ];

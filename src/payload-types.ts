@@ -604,7 +604,7 @@ export interface RssCategoryKeyword {
  */
 export interface PipelineReport {
   id: number;
-  type: 'kw-pipeline' | 'rss-pipeline';
+  type: 'kw-pipeline' | 'rss-pipeline' | 'carousel-pipeline';
   runDate: string;
   duration?: string | null;
   articleSaved?: number | null;

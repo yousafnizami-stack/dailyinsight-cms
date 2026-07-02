@@ -23,6 +23,7 @@ export const PipelineReports: CollectionConfig = {
       options: [
         { label: 'KW Pipeline', value: 'kw-pipeline' },
         { label: 'RSS Pipeline', value: 'rss-pipeline' },
+        { label: 'Carousel Pipeline', value: 'carousel-pipeline' },
       ],
     },
     {
