@@ -76,7 +76,9 @@ export interface Config {
     keywords: Keyword;
     'used-urls': UsedUrl;
     'rss-sources': RssSource;
+    'rss-category-keywords': RssCategoryKeyword;
     'pipeline-reports': PipelineReport;
+    horoscopes: Horoscope;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -94,7 +96,9 @@ export interface Config {
     keywords: KeywordsSelect<false> | KeywordsSelect<true>;
     'used-urls': UsedUrlsSelect<false> | UsedUrlsSelect<true>;
     'rss-sources': RssSourcesSelect<false> | RssSourcesSelect<true>;
+    'rss-category-keywords': RssCategoryKeywordsSelect<false> | RssCategoryKeywordsSelect<true>;
     'pipeline-reports': PipelineReportsSelect<false> | PipelineReportsSelect<true>;
+    horoscopes: HoroscopesSelect<false> | HoroscopesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -568,11 +572,29 @@ export interface RssSource {
   id: number;
   url: string;
   category?: ('royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle') | null;
+  /**
+   * Comma-separated keywords matched against RSS item URLs and titles. Only items containing at least one keyword will be processed. Leave blank to process all items. Example: andrew, beatrice, eugenie, fergie
+   */
+  filterKeywords?: string | null;
   weight: number;
   /**
    * Uncheck to temporarily disable this source without deleting it
    */
   active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rss-category-keywords".
+ */
+export interface RssCategoryKeyword {
+  id: number;
+  category: 'royals' | 'entertainment' | 'celebrity' | 'tv' | 'music' | 'film' | 'lifestyle';
+  /**
+   * Comma-separated keywords for this category. Used to filter RSS items across all sources in this category.
+   */
+  filterKeywords?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -648,6 +670,29 @@ export interface PipelineReport {
     | string
     | number
     | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "horoscopes".
+ */
+export interface Horoscope {
+  id: number;
+  date: string;
+  publishedDate?: string | null;
+  signs?:
+    | {
+        sign?: string | null;
+        reading?: string | null;
+        love?: number | null;
+        career?: number | null;
+        luckyColour?: string | null;
+        luckyNumber?: number | null;
+        luckyDay?: string | null;
+        id?: string | null;
+      }[]
     | null;
   updatedAt: string;
   createdAt: string;
@@ -739,8 +784,16 @@ export interface PayloadLockedDocument {
         value: number | RssSource;
       } | null)
     | ({
+        relationTo: 'rss-category-keywords';
+        value: number | RssCategoryKeyword;
+      } | null)
+    | ({
         relationTo: 'pipeline-reports';
         value: number | PipelineReport;
+      } | null)
+    | ({
+        relationTo: 'horoscopes';
+        value: number | Horoscope;
       } | null)
     | ({
         relationTo: 'users';
@@ -1037,8 +1090,19 @@ export interface UsedUrlsSelect<T extends boolean = true> {
 export interface RssSourcesSelect<T extends boolean = true> {
   url?: T;
   category?: T;
+  filterKeywords?: T;
   weight?: T;
   active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rss-category-keywords_select".
+ */
+export interface RssCategoryKeywordsSelect<T extends boolean = true> {
+  category?: T;
+  filterKeywords?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1059,6 +1123,28 @@ export interface PipelineReportsSelect<T extends boolean = true> {
   errors?: T;
   claudeCalls?: T;
   serpApiUsage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "horoscopes_select".
+ */
+export interface HoroscopesSelect<T extends boolean = true> {
+  date?: T;
+  publishedDate?: T;
+  signs?:
+    | T
+    | {
+        sign?: T;
+        reading?: T;
+        love?: T;
+        career?: T;
+        luckyColour?: T;
+        luckyNumber?: T;
+        luckyDay?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1134,6 +1220,7 @@ export interface PipelinePrompt {
   systemPrompt: string;
   rssSystemPrompt?: string | null;
   testSystemPrompt?: string | null;
+  carouselSystemPrompt?: string | null;
   wordCountMin?: number | null;
   wordCountMax?: number | null;
   updatedAt?: string | null;
@@ -1175,6 +1262,7 @@ export interface PipelinePromptSelect<T extends boolean = true> {
   systemPrompt?: T;
   rssSystemPrompt?: T;
   testSystemPrompt?: T;
+  carouselSystemPrompt?: T;
   wordCountMin?: T;
   wordCountMax?: T;
   updatedAt?: T;

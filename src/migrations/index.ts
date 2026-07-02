@@ -21,6 +21,7 @@ import * as migration_20260613_164920_add_named_authors_to_enum from './20260613
 import * as migration_20260613_175046_fix_migration_batch_numbers from './20260613_175046_fix_migration_batch_numbers';
 import * as migration_20260627_add_filter_keywords_to_rss_sources from './20260627_add_filter_keywords_to_rss_sources';
 import * as migration_20260627_add_rss_category_keywords from './20260627_add_rss_category_keywords';
+import * as migration_20260702_120000_add_carousel_system_prompt_field from './20260702_120000_add_carousel_system_prompt_field';
 
 export const migrations = [
   {
@@ -137,5 +138,10 @@ export const migrations = [
     up: migration_20260627_add_rss_category_keywords.up,
     down: migration_20260627_add_rss_category_keywords.down,
     name: '20260627_add_rss_category_keywords',
+  },
+  {
+    up: migration_20260702_120000_add_carousel_system_prompt_field.up,
+    down: migration_20260702_120000_add_carousel_system_prompt_field.down,
+    name: '20260702_120000_add_carousel_system_prompt_field',
   },
 ];
