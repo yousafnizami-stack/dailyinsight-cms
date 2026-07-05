@@ -76,7 +76,22 @@ export default buildConfig({
         api_secret: process.env.CLOUDINARY_API_SECRET,
       },
       collections: {
-        media: { folder: 'dailyinsight' },
+        media: {
+          folder: 'dailyinsight',
+          // Ensures any file uploaded through the plain admin Media Library UI (drag-and-
+          // drop) gets auto-compressed the same way the two custom upload routes already
+          // do. Confirmed against payload-storage-cloudinary's source: normalizeConfig.js
+          // treats a `transformations` object without a `default` key as the default
+          // transform itself, and buildUploadOptions() in handlers/handleUpload.js reads
+          // transformConfig.default and passes it straight through as Cloudinary's
+          // `transformation` upload option. Using the explicit `{ default: {...} }` form
+          // here to match the documented TransformationConfig type exactly (types.d.ts:
+          // `default?: Record<string, any>`), rather than relying on the implicit
+          // no-default-key shorthand.
+          transformations: {
+            default: { quality: 'auto', fetch_format: 'auto' },
+          },
+        },
       },
     }),
   ],
