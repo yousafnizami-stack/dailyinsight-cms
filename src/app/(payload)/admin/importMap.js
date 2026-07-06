@@ -5,6 +5,7 @@ import { ImagePicker as ImagePicker_28d758c4af12997f5af3e641b62dec9c } from '@/c
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
+import { InsertCarouselFeatureClient as InsertCarouselFeatureClient_5d427fa2195de8ad68816dfa73a8de5d } from '@/lexical/InsertCarouselFeature/client'
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { SaveCarouselToLibrary as SaveCarouselToLibrary_8cab0eea28273a3339c6002b34c456d6 } from '@/components/SaveCarouselToLibrary'
 import { UploadFeatureClient as UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
@@ -41,6 +42,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,
+  "@/lexical/InsertCarouselFeature/client#InsertCarouselFeatureClient": InsertCarouselFeatureClient_5d427fa2195de8ad68816dfa73a8de5d,
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/SaveCarouselToLibrary#SaveCarouselToLibrary": SaveCarouselToLibrary_8cab0eea28273a3339c6002b34c456d6,
   "@payloadcms/richtext-lexical/client#UploadFeatureClient": UploadFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
