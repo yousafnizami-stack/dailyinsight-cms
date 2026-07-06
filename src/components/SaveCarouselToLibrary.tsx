@@ -10,11 +10,17 @@ import { Button, Pill, useForm } from '@payloadcms/ui'
 // admin.components.Label replaces the block's entire default header (pill + block name),
 // so the pill is reconstructed here to keep the same look, with the button added alongside.
 //
-// Uses Payload's own <Button> component with an onMouseDown preventDefault, exactly
-// matching the pattern Payload's built-in EditButton/RemoveButton already use in this
-// same block header — a raw <button> here previously produced zero effect on click
-// (mousedown was shifting lexical's DOM selection/focus out from under the click before
-// it completed); the onMouseDown preventDefault stops that.
+// CONFIRMED (via @payloadcms/ui's Collapsible/index.scss) root cause of the click doing
+// nothing: .collapsible__toggle is a full-size (width/height: 100%) absolutely-positioned
+// transparent button covering the entire header row, and .collapsible__header-wrap — where
+// admin.components.Label content is rendered — has `pointer-events: none`, so clicks pass
+// straight through it to the toggle underneath. Payload's own Edit/Remove buttons only work
+// because their wrapper (.collapsible__actions) explicitly sets `pointer-events: all` to
+// punch back through. The wrapper below does the same with an inline style (can't reach
+// into that global .scss class from here), plus position/z-index as a second guard against
+// the toggle's absolutely-positioned overlay. The onMouseDown preventDefault on the button
+// itself mirrors Payload's own EditButton/RemoveButton pattern for preserving lexical
+// selection around the click.
 export function SaveCarouselToLibrary() {
   const { getData } = useForm()
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
@@ -68,7 +74,14 @@ export function SaveCarouselToLibrary() {
 
   return (
     <div
-      style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        position: 'relative',
+        zIndex: 1,
+        pointerEvents: 'auto',
+      }}
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
     >
