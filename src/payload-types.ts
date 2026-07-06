@@ -79,6 +79,7 @@ export interface Config {
     'rss-category-keywords': RssCategoryKeyword;
     'pipeline-reports': PipelineReport;
     horoscopes: Horoscope;
+    carousels: Carousel;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -99,6 +100,7 @@ export interface Config {
     'rss-category-keywords': RssCategoryKeywordsSelect<false> | RssCategoryKeywordsSelect<true>;
     'pipeline-reports': PipelineReportsSelect<false> | PipelineReportsSelect<true>;
     horoscopes: HoroscopesSelect<false> | HoroscopesSelect<true>;
+    carousels: CarouselsSelect<false> | CarouselsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -699,6 +701,26 @@ export interface Horoscope {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carousels".
+ */
+export interface Carousel {
+  id: number;
+  /**
+   * Label for browsing this carousel in the library — not shown on the frontend.
+   */
+  name: string;
+  images?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -794,6 +816,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'horoscopes';
         value: number | Horoscope;
+      } | null)
+    | ({
+        relationTo: 'carousels';
+        value: number | Carousel;
       } | null)
     | ({
         relationTo: 'users';
@@ -1143,6 +1169,22 @@ export interface HoroscopesSelect<T extends boolean = true> {
         luckyColour?: T;
         luckyNumber?: T;
         luckyDay?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carousels_select".
+ */
+export interface CarouselsSelect<T extends boolean = true> {
+  name?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
         id?: T;
       };
   updatedAt?: T;

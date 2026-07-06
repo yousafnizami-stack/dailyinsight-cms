@@ -1,0 +1,87 @@
+'use client'
+import { useState } from 'react'
+import { Pill, useForm } from '@payloadcms/ui'
+
+// Rendered as CarouselBlockConfig's admin.components.Label. Payload's richtext-lexical
+// gives each block instance in the editor its own isolated <Form> (see useDocumentForm's
+// own doc comment in @payloadcms/ui: "This is the case within lexical Blocks, as each
+// lexical block renders their own Form") — so the plain useForm() hook here resolves to
+// THIS specific block instance's own fields, not the whole article document. Setting
+// admin.components.Label replaces the block's entire default header (pill + block name),
+// so the pill is reconstructed here to keep the same look, with the button added alongside.
+export function SaveCarouselToLibrary() {
+  const { getData } = useForm()
+  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [message, setMessage] = useState('')
+
+  async function handleSave(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const data = getData() as { images?: Array<{ caption?: string; image?: unknown }> }
+    const images = Array.isArray(data.images) ? data.images : []
+    if (images.length === 0) {
+      setStatus('error')
+      setMessage('Add at least one image first')
+      setTimeout(() => { setStatus('idle'); setMessage('') }, 3000)
+      return
+    }
+
+    const name = window.prompt('Name this carousel for the library:')
+    if (!name || !name.trim()) return
+
+    setStatus('saving')
+    setMessage('')
+    try {
+      const res = await fetch('/api/carousels', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          // Only image + caption are copied — no row id, blockName, etc. This is a
+          // one-way copy into a brand new Carousels document: it doesn't alter the
+          // source block and doesn't link back to it.
+          images: images.map((row) => ({ image: row.image, caption: row.caption })),
+        }),
+      })
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        throw new Error(json?.errors?.[0]?.message || json?.message || `Save failed (${res.status})`)
+      }
+      setStatus('saved')
+      setMessage('Saved to library')
+    } catch (err: any) {
+      setStatus('error')
+      setMessage(err.message || 'Save failed')
+    } finally {
+      setTimeout(() => { setStatus('idle'); setMessage('') }, 3000)
+    }
+  }
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={(e) => e.stopPropagation()}>
+      <Pill pillStyle="white" size="small">Carousel</Pill>
+      <button
+        type="button"
+        onClick={handleSave}
+        disabled={status === 'saving'}
+        style={{
+          fontSize: '11px',
+          fontWeight: 'bold',
+          textTransform: 'uppercase',
+          padding: '4px 10px',
+          borderRadius: '4px',
+          border: 'none',
+          cursor: status === 'saving' ? 'not-allowed' : 'pointer',
+          background: status === 'saved' ? '#16a34a' : status === 'error' ? '#dc2626' : '#3b82f6',
+          color: 'white',
+        }}
+      >
+        {status === 'saving' ? 'Saving...' : status === 'saved' ? 'Saved ✓' : status === 'error' ? 'Retry' : 'Save to Library'}
+      </button>
+      {message && (
+        <span style={{ fontSize: '11px', color: status === 'error' ? '#dc2626' : '#16a34a' }}>{message}</span>
+      )}
+    </div>
+  )
+}

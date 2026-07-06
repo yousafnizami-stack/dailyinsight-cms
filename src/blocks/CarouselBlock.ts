@@ -3,6 +3,11 @@ import type { Block } from 'payload'
 export const CarouselBlockConfig: Block = {
   slug: 'carousel',
   labels: { singular: 'Carousel', plural: 'Carousels' },
+  admin: {
+    components: {
+      Label: '@/components/SaveCarouselToLibrary#SaveCarouselToLibrary',
+    },
+  },
   fields: [
     {
       name: 'images',
