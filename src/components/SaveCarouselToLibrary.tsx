@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Pill, useForm } from '@payloadcms/ui'
+import { Button, Pill, useForm } from '@payloadcms/ui'
 
 // Rendered as CarouselBlockConfig's admin.components.Label. Payload's richtext-lexical
 // gives each block instance in the editor its own isolated <Form> (see useDocumentForm's
@@ -9,12 +9,20 @@ import { Pill, useForm } from '@payloadcms/ui'
 // THIS specific block instance's own fields, not the whole article document. Setting
 // admin.components.Label replaces the block's entire default header (pill + block name),
 // so the pill is reconstructed here to keep the same look, with the button added alongside.
+//
+// Uses Payload's own <Button> component with an onMouseDown preventDefault, exactly
+// matching the pattern Payload's built-in EditButton/RemoveButton already use in this
+// same block header — a raw <button> here previously produced zero effect on click
+// (mousedown was shifting lexical's DOM selection/focus out from under the click before
+// it completed); the onMouseDown preventDefault stops that.
 export function SaveCarouselToLibrary() {
   const { getData } = useForm()
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [message, setMessage] = useState('')
 
   async function handleSave(e: React.MouseEvent) {
+    // eslint-disable-next-line no-console
+    console.log('[SaveCarouselToLibrary] click fired')
     e.preventDefault()
     e.stopPropagation()
 
@@ -59,26 +67,22 @@ export function SaveCarouselToLibrary() {
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={(e) => e.stopPropagation()}>
+    <div
+      style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+    >
       <Pill pillStyle="white" size="small">Carousel</Pill>
-      <button
-        type="button"
-        onClick={handleSave}
+      <Button
+        buttonStyle={status === 'error' ? 'error' : 'secondary'}
         disabled={status === 'saving'}
-        style={{
-          fontSize: '11px',
-          fontWeight: 'bold',
-          textTransform: 'uppercase',
-          padding: '4px 10px',
-          borderRadius: '4px',
-          border: 'none',
-          cursor: status === 'saving' ? 'not-allowed' : 'pointer',
-          background: status === 'saved' ? '#16a34a' : status === 'error' ? '#dc2626' : '#3b82f6',
-          color: 'white',
-        }}
+        el="button"
+        onClick={handleSave}
+        onMouseDown={(e) => e.preventDefault()}
+        size="small"
       >
         {status === 'saving' ? 'Saving...' : status === 'saved' ? 'Saved ✓' : status === 'error' ? 'Retry' : 'Save to Library'}
-      </button>
+      </Button>
       {message && (
         <span style={{ fontSize: '11px', color: status === 'error' ? '#dc2626' : '#16a34a' }}>{message}</span>
       )}
