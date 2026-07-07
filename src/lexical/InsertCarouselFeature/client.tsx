@@ -51,14 +51,19 @@ function InsertCarouselToolbarButtonSafe(props: Parameters<typeof InsertCarousel
   )
 }
 
-// Contributes one new fixed-toolbar group, same mechanism the built-in Blocks feature uses
-// for its own "Insert Block" dropdown (toolbarFixed.groups) — a brand new group key, so it
-// doesn't merge with/replace any existing toolbar group.
+// Contributes one new inline (floating selection) toolbar group — this app's Articles body
+// editor only has InlineToolbarFeature active (from defaultFeatures); FixedToolbarFeature is
+// never added, so registering under toolbarFixed silently computed correctly but was never
+// rendered by anything. toolbarInline uses the identical ToolbarGroup/ToolbarGroupItem shape
+// (confirmed in @payloadcms/richtext-lexical's toolbars/types.ts and the inline toolbar's own
+// renderer), just a different top-level key — a brand new group key here too, so it doesn't
+// merge with/replace any existing toolbar group.
+//
+// Note: the inline toolbar only renders while there's an active text selection (matching
+// Bold/Italic's own behavior) — select some text near the desired insertion point first.
 export const InsertCarouselFeatureClient = createClientFeature(() => {
-  // eslint-disable-next-line no-console
-  console.log('[InsertCarouselFeatureClient] factory function called')
   return {
-    toolbarFixed: {
+    toolbarInline: {
       groups: [
         {
           type: 'buttons',
