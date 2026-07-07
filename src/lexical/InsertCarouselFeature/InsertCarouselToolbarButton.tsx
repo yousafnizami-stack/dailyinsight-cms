@@ -27,7 +27,20 @@ function toImageId(value: unknown): unknown {
 // toolbar item's `Component` slot (which receives `editor` directly) instead, replicating
 // the same click/focus behavior manually rather than the onSelect-only path.
 export function InsertCarouselToolbarButton({ editor }: { editor: LexicalEditor }) {
-  const [ListDrawer, , { openDrawer }] = useListDrawer({ collectionSlugs: ['carousels'] })
+  // DIAGNOSTIC (temporary): pinpoint whether useListDrawer itself throws synchronously
+  // during render (e.g. a missing provider context) vs. failing later (e.g. inside its
+  // own internal effects, which this try/catch can't catch but the client.tsx error
+  // boundary can). Re-thrown so the boundary still catches it and shows a visible
+  // fallback — this only adds attribution to the log, it doesn't swallow anything.
+  let listDrawerResult: ReturnType<typeof useListDrawer>
+  try {
+    listDrawerResult = useListDrawer({ collectionSlugs: ['carousels'] })
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error('[InsertCarouselToolbarButton] useListDrawer threw during render:', err)
+    throw err
+  }
+  const [ListDrawer, , { openDrawer }] = listDrawerResult
 
   const handleSelect = useCallback(
     ({ doc }: { doc: { images?: Array<{ caption?: string; image?: unknown }> } }) => {
