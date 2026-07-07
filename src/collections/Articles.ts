@@ -201,12 +201,23 @@ export const Articles: CollectionConfig = {
       name: 'body',
       type: 'richText',
       editor: lexicalEditor({
-        features: ({ defaultFeatures }) => [
-          ...defaultFeatures,
-          UploadFeature({ collections: { media: { fields: [] } } }),
-          BlocksFeature({ blocks: [EmbedBlockConfig, CarouselBlockConfig] }),
-          InsertCarouselFeature(),
-        ],
+        features: ({ defaultFeatures }) => {
+          const builtFeatures = [
+            ...defaultFeatures,
+            UploadFeature({ collections: { media: { fields: [] } } }),
+            BlocksFeature({ blocks: [EmbedBlockConfig, CarouselBlockConfig] }),
+            InsertCarouselFeature(),
+          ]
+          // DIAGNOSTIC (temporary): this file is server-only Payload config (Node.js —
+          // never bundled for/executed in the browser), so this logs to the SERVER
+          // process's stdout (terminal / Vercel function logs), not the browser console.
+          // eslint-disable-next-line no-console
+          console.log(
+            '[Articles.ts] features array built, includes InsertCarouselFeature:',
+            builtFeatures.some((f) => (f as { key?: string })?.key === 'insertCarouselFromLibrary'),
+          )
+          return builtFeatures
+        },
       }),
     },
     {

@@ -55,6 +55,8 @@ function InsertCarouselToolbarButtonSafe(props: Parameters<typeof InsertCarousel
 // for its own "Insert Block" dropdown (toolbarFixed.groups) — a brand new group key, so it
 // doesn't merge with/replace any existing toolbar group.
 export const InsertCarouselFeatureClient = createClientFeature(() => {
+  // eslint-disable-next-line no-console
+  console.log('[InsertCarouselFeatureClient] factory function called')
   return {
     toolbarFixed: {
       groups: [
