@@ -84,6 +84,15 @@ Do not return anything outside the JSON object.`,
       },
     },
     {
+      name: 'articleBriefSystemPrompt',
+      type: 'textarea',
+      required: false,
+      label: 'Article Brief System Prompt',
+      admin: {
+        rows: 14,
+      },
+    },
+    {
       name: 'wordCountMin',
       type: 'number',
       defaultValue: 500,

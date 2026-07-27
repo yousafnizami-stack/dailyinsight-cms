@@ -1263,6 +1263,7 @@ export interface PipelinePrompt {
   rssSystemPrompt?: string | null;
   testSystemPrompt?: string | null;
   carouselSystemPrompt?: string | null;
+  articleBriefSystemPrompt?: string | null;
   wordCountMin?: number | null;
   wordCountMax?: number | null;
   updatedAt?: string | null;
@@ -1305,6 +1306,7 @@ export interface PipelinePromptSelect<T extends boolean = true> {
   rssSystemPrompt?: T;
   testSystemPrompt?: T;
   carouselSystemPrompt?: T;
+  articleBriefSystemPrompt?: T;
   wordCountMin?: T;
   wordCountMax?: T;
   updatedAt?: T;
