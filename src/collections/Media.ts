@@ -31,6 +31,14 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: false,
     },
+    {
+      name: 'subjects',
+      type: 'text',
+      required: false,
+      admin: {
+        description: 'Auto-populated subject names, traced from articles this image appears in — used for library search, does not affect alt/caption.',
+      },
+    },
   ],
   upload: {
     disableLocalStorage: true,

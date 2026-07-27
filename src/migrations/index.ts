@@ -25,6 +25,7 @@ import * as migration_20260702_120000_add_carousel_system_prompt_field from './2
 import * as migration_20260702_130000_add_carousel_pipeline_report_type from './20260702_130000_add_carousel_pipeline_report_type';
 import * as migration_20260706_211141_add_carousels_collection from './20260706_211141_add_carousels_collection';
 import * as migration_20260727_154645_add_article_brief_system_prompt_field from './20260727_154645_add_article_brief_system_prompt_field';
+import * as migration_20260727_165142_add_media_subjects_field from './20260727_165142_add_media_subjects_field';
 
 export const migrations = [
   {
@@ -161,5 +162,10 @@ export const migrations = [
     up: migration_20260727_154645_add_article_brief_system_prompt_field.up,
     down: migration_20260727_154645_add_article_brief_system_prompt_field.down,
     name: '20260727_154645_add_article_brief_system_prompt_field',
+  },
+  {
+    up: migration_20260727_165142_add_media_subjects_field.up,
+    down: migration_20260727_165142_add_media_subjects_field.down,
+    name: '20260727_165142_add_media_subjects_field',
   },
 ];

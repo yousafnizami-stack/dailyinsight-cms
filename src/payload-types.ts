@@ -281,6 +281,10 @@ export interface Media {
    */
   caption?: string | null;
   title?: string | null;
+  /**
+   * Auto-populated subject names, traced from articles this image appears in — used for library search, does not affect alt/caption.
+   */
+  subjects?: string | null;
   cloudinaryPublicId?: string | null;
   cloudinaryUrl?: string | null;
   cloudinaryResourceType?: string | null;
@@ -1043,6 +1047,7 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   title?: T;
+  subjects?: T;
   cloudinaryPublicId?: T;
   cloudinaryUrl?: T;
   cloudinaryResourceType?: T;
