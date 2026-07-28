@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json()
-    const { cloudinaryPublicId, cloudinaryUrl, cloudinaryResourceType, cloudinaryFormat, alt, caption } = body
+    const { cloudinaryPublicId, cloudinaryUrl, cloudinaryResourceType, cloudinaryFormat, alt, caption, title, subjects } = body
 
     if (!cloudinaryPublicId || !cloudinaryUrl) {
       return NextResponse.json({ error: 'cloudinaryPublicId and cloudinaryUrl are required' }, { status: 400 })
@@ -60,6 +60,13 @@ export async function POST(req: NextRequest) {
         alt: alt || '',
         caption: caption || '',
         ...(mimeType !== undefined && { mimeType }),
+        // Both optional — unlike alt/caption above, these are NOT forced to '' when
+        // absent. Callers that don't pass them (e.g. carousel-pipeline.mjs, which this
+        // task explicitly does not change) must see identical behavior to before: the
+        // field simply omitted from data, so Media's own schema default (null) applies
+        // exactly as it always has.
+        ...(typeof title === 'string' && { title }),
+        ...(typeof subjects === 'string' && { subjects }),
       } as any,
       overrideAccess: true,
     })
