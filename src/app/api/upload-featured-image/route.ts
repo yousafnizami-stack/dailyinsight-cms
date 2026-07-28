@@ -9,6 +9,23 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
+// Same normalization regex as pipeline/keyword-pipeline-test-images.mjs's own
+// toTitleCaseUnderscored (dailyinsight repo — duplicated here rather than imported,
+// since these are separate codebases with no shared module system) — splits on
+// anything that's not a letter/number/apostrophe, not just whitespace, so stray
+// punctuation in a real headline (commas, colons, em dashes, etc.) doesn't leak into
+// the underscore-joined result. Deliberately does NOT attempt to extract only
+// person-name portions via regex — that's an unreliable parse against arbitrary
+// tabloid headlines; the full title is used as-is, just reformatted.
+function toTitleCaseUnderscored(s: string): string {
+  return s
+    .trim()
+    .split(/[^a-zA-Z0-9']+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join('_')
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { imageUrl, filename, articleId, collection, saveToMediaOnly } = await req.json()
@@ -75,6 +92,33 @@ export async function POST(req: NextRequest) {
       console.log('Alt text generation failed, using filename:', e)
     }
 
+    // subjects/title — only for the saveToMediaOnly path (ImagePicker's "Save to Media"
+    // button, which always has articleId in scope but isn't updating that article's own
+    // featuredImage here). subjects matches the exact convention already established by
+    // scripts/backfill-media-subjects.mjs and keyword-pipeline-test-images.mjs — the
+    // referencing article's title, verbatim — so library-first search finds these
+    // manually-saved images the same way it finds pipeline-created ones. Any failure
+    // here (missing articleId, bad fetch) is non-fatal — falls back to the pre-existing
+    // behavior of not setting either field, exactly as before this change.
+    let mediaSubjects: string | undefined
+    let mediaTitle: string | undefined
+    if (saveToMediaOnly && articleId) {
+      try {
+        const articleDoc = await payload.findByID({
+          collection: (collection || 'articles') as any,
+          id: Number(articleId),
+          select: { title: true } as any,
+          overrideAccess: true,
+        })
+        if (articleDoc?.title) {
+          mediaSubjects = articleDoc.title
+          mediaTitle = toTitleCaseUnderscored(articleDoc.title)
+        }
+      } catch (e) {
+        console.log('Article title fetch for subjects/title failed (non-fatal):', e)
+      }
+    }
+
     // Create media record using Payload's local API with file data
     const mediaRecord = await payload.create({
       collection: 'media',
@@ -88,6 +132,8 @@ export async function POST(req: NextRequest) {
         url: uploadResult.secure_url,
         width: uploadResult.width,
         height: uploadResult.height,
+        ...(mediaSubjects !== undefined && { subjects: mediaSubjects }),
+        ...(mediaTitle !== undefined && { title: mediaTitle }),
       } as any,
       file: {
         data: imageBuffer,
