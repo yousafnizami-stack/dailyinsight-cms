@@ -26,6 +26,7 @@ import * as migration_20260702_130000_add_carousel_pipeline_report_type from './
 import * as migration_20260706_211141_add_carousels_collection from './20260706_211141_add_carousels_collection';
 import * as migration_20260727_154645_add_article_brief_system_prompt_field from './20260727_154645_add_article_brief_system_prompt_field';
 import * as migration_20260727_165142_add_media_subjects_field from './20260727_165142_add_media_subjects_field';
+import * as migration_20260729_122801_add_pending_drafts_collection from './20260729_122801_add_pending_drafts_collection';
 
 export const migrations = [
   {
@@ -156,7 +157,7 @@ export const migrations = [
   {
     up: migration_20260706_211141_add_carousels_collection.up,
     down: migration_20260706_211141_add_carousels_collection.down,
-    name: '20260706_211141_add_carousels_collection'
+    name: '20260706_211141_add_carousels_collection',
   },
   {
     up: migration_20260727_154645_add_article_brief_system_prompt_field.up,
@@ -167,5 +168,10 @@ export const migrations = [
     up: migration_20260727_165142_add_media_subjects_field.up,
     down: migration_20260727_165142_add_media_subjects_field.down,
     name: '20260727_165142_add_media_subjects_field',
+  },
+  {
+    up: migration_20260729_122801_add_pending_drafts_collection.up,
+    down: migration_20260729_122801_add_pending_drafts_collection.down,
+    name: '20260729_122801_add_pending_drafts_collection'
   },
 ];

@@ -80,6 +80,7 @@ export interface Config {
     'pipeline-reports': PipelineReport;
     horoscopes: Horoscope;
     carousels: Carousel;
+    'pending-drafts': PendingDraft;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -101,6 +102,7 @@ export interface Config {
     'pipeline-reports': PipelineReportsSelect<false> | PipelineReportsSelect<true>;
     horoscopes: HoroscopesSelect<false> | HoroscopesSelect<true>;
     carousels: CarouselsSelect<false> | CarouselsSelect<true>;
+    'pending-drafts': PendingDraftsSelect<false> | PendingDraftsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -725,6 +727,69 @@ export interface Carousel {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pending-drafts".
+ */
+export interface PendingDraft {
+  id: number;
+  title: string;
+  category?: (number | null) | Category;
+  /**
+   * Byline shown on article page
+   */
+  author?:
+    | (
+        | 'di-royal-reporter'
+        | 'di-entertainment-desk'
+        | 'di-music-desk'
+        | 'di-film-desk'
+        | 'web-desk'
+        | 'news-desk'
+        | 'celebrity-desk'
+        | 'royal-family-desk'
+        | 'sophie-marshall'
+        | 'james-okafor'
+        | 'claire-dennison'
+        | 'tom-everett'
+        | 'rachel-hinds'
+        | 'priya-nair'
+      )
+    | null;
+  /**
+   * The KW pipeline search keyword that generated this draft
+   */
+  keyword?: string | null;
+  sourceUrls?:
+    | {
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  featuredImage?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Keep under 200 characters — shown in article previews and social sharing.
+   */
+  excerpt?: string | null;
+  reviewNote?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -824,6 +889,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'carousels';
         value: number | Carousel;
+      } | null)
+    | ({
+        relationTo: 'pending-drafts';
+        value: number | PendingDraft;
       } | null)
     | ({
         relationTo: 'users';
@@ -1192,6 +1261,28 @@ export interface CarouselsSelect<T extends boolean = true> {
         caption?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pending-drafts_select".
+ */
+export interface PendingDraftsSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  author?: T;
+  keyword?: T;
+  sourceUrls?:
+    | T
+    | {
+        url?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  body?: T;
+  excerpt?: T;
+  reviewNote?: T;
   updatedAt?: T;
   createdAt?: T;
 }
