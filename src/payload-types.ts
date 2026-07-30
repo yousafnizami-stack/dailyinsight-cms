@@ -785,6 +785,15 @@ export interface PendingDraft {
    */
   excerpt?: string | null;
   reviewNote?: string | null;
+  imageOptions?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1283,6 +1292,7 @@ export interface PendingDraftsSelect<T extends boolean = true> {
   body?: T;
   excerpt?: T;
   reviewNote?: T;
+  imageOptions?: T;
   updatedAt?: T;
   createdAt?: T;
 }

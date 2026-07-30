@@ -80,6 +80,15 @@ export const PendingDrafts: CollectionConfig = {
       relationTo: 'media',
     },
     {
+      name: 'imagePicker',
+      type: 'ui',
+      admin: {
+        components: {
+          Field: '@/components/ImagePicker#ImagePicker',
+        },
+      },
+    },
+    {
       name: 'body',
       type: 'richText',
       editor: lexicalEditor({
@@ -102,5 +111,14 @@ export const PendingDrafts: CollectionConfig = {
       name: 'reviewNote',
       type: 'textarea',
     },
+    // Candidate image URLs (og:image + inline <img> srcs) captured during scraping — the
+    // full pool ImagePicker above reads from (see its own useField({ path: 'imageOptions'
+    // })), so a human reviewing a staged draft can see and pick from every original
+    // candidate, not just whichever one the automated watermark/relevance checks resolved
+    // into featuredImage/body. Matches Articles' own imageOptions field exactly (same
+    // hidden JSON shape) — /api/ingest-pending already forwards it from the pipeline's
+    // payload; this field was the only missing piece, since Payload silently drops data
+    // keys with no matching field.
+    { name: 'imageOptions', type: 'json', admin: { hidden: true } },
   ],
 }
