@@ -65,7 +65,18 @@ export async function POST(req: NextRequest) {
         // task explicitly does not change) must see identical behavior to before: the
         // field simply omitted from data, so Media's own schema default (null) applies
         // exactly as it always has.
-        ...(typeof title === 'string' && { title }),
+        //
+        // filename drives Media's admin.useAsTitle (src/collections/Media.ts) — the list
+        // view's title column. This route never attaches a `file:` object (it only
+        // references an already-uploaded Cloudinary asset by URL/publicId), so Payload's
+        // own upload machinery — which normally derives filename automatically from an
+        // attached file — has nothing to populate it from. Confirmed via live DB query
+        // that every doc created by this route previously had filename NULL despite title
+        // being set. Reusing the already-computed title (plus a real extension) closes
+        // that gap for both callers of this shared route (keyword-pipeline-images.mjs and
+        // carousel-pipeline.mjs) — same condition as title itself, so filename is only
+        // ever set when title actually is.
+        ...(typeof title === 'string' && { title, filename: `${title}.${cloudinaryFormat || 'jpg'}` }),
         ...(typeof subjects === 'string' && { subjects }),
       } as any,
       overrideAccess: true,
