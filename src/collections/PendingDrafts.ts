@@ -3,6 +3,7 @@ import { lexicalEditor, BlocksFeature, UploadFeature } from '@payloadcms/richtex
 import { EmbedBlockConfig } from '../blocks/EmbedBlock'
 import { CarouselBlockConfig } from '../blocks/CarouselBlock'
 import { InsertCarouselFeature } from '../lexical/InsertCarouselFeature/server'
+import { promotePendingDraftToArticle } from '../lib/promotePendingDraft'
 
 // Internal staging area for KW-pipeline-generated drafts pending image integration/review
 // before promotion to Articles — not public-facing, unlike Articles' own `read: () =>
@@ -22,6 +23,45 @@ export const PendingDrafts: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'keyword', 'createdAt'],
   },
+  hooks: {
+    beforeChange: [
+      // Mirrors Articles' own beforeChange pattern (src/collections/Articles.ts) for
+      // detecting a transition INTO published — same `data.status === 'published' &&
+      // originalDoc?.status !== 'published'` comparison. Fires when an editor flips this
+      // doc's native status field to Published directly in the CMS admin — a SEPARATE
+      // path from the PMS Review tab's /api/pending-drafts/[id]/publish route, which
+      // promotes AND deletes the draft. This path deliberately does NOT delete anything —
+      // a status change should behave like Payload's normal save behavior (the document
+      // persists, now marked published), exactly how Articles themselves behave on
+      // publish. Reuses promotePendingDraftToArticle for the identical field mapping the
+      // route already uses, rather than duplicating it here.
+      async ({ data, originalDoc, req }) => {
+        if (data.status === 'published' && originalDoc?.status !== 'published') {
+          // `data` may only contain the fields actually changed in this particular save
+          // (e.g. a partial API update) rather than the full document — merge over
+          // originalDoc so the promoted Article always gets complete field values
+          // regardless of how this save was triggered. Deliberately NOT wrapped in
+          // try/catch: if promotion fails, the save itself must fail too (Payload aborts
+          // and surfaces the error to the admin UI) — a PendingDraft silently left marked
+          // "published" with no real Article behind it would be a misleading, broken
+          // state, worse than just letting the save error out.
+          const merged = { ...originalDoc, ...data }
+          const article = await promotePendingDraftToArticle(req.payload, {
+            title: merged.title,
+            body: merged.body,
+            category: merged.category,
+            author: merged.author,
+            excerpt: merged.excerpt,
+            reviewNote: merged.reviewNote,
+            sourceUrls: merged.sourceUrls,
+            featuredImage: merged.featuredImage,
+          })
+          data.publishedArticleId = article.id
+        }
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: 'title',
@@ -37,6 +77,15 @@ export const PendingDrafts: CollectionConfig = {
       ],
       defaultValue: 'draft',
       required: true,
+    },
+    {
+      name: 'publishedArticleId',
+      type: 'relationship',
+      relationTo: 'articles',
+      admin: {
+        readOnly: true,
+        description: 'Set automatically when this draft is published via the status field above — links to the resulting live Article.',
+      },
     },
     {
       name: 'category',

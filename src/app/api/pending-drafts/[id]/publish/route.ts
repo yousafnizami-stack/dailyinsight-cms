@@ -1,14 +1,16 @@
 import { getPayload } from 'payload'
 import { NextRequest, NextResponse } from 'next/server'
 import config from '@payload-config'
+import { promotePendingDraftToArticle } from '@/lib/promotePendingDraft'
 
 // Promotes a staged pending-draft into a real, published Article, then removes the
 // pending-draft. Fetched at depth:0 so relationship fields (category, featuredImage) come
 // back as raw IDs rather than populated objects — exactly the shape payload.create()
-// expects when handed straight to the new Articles doc. slug is deliberately not set
-// here — Articles' own beforeChange hook (src/collections/Articles.ts) generates one from
-// title automatically when absent, same as every other article-creating route in this
-// codebase relies on.
+// expects when handed straight to the new Articles doc (see promotePendingDraftToArticle
+// for the actual field mapping, shared with PendingDrafts' own status-field beforeChange
+// hook). slug is deliberately not set here — Articles' own beforeChange hook
+// (src/collections/Articles.ts) generates one from title automatically when absent, same
+// as every other article-creating route in this codebase relies on.
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const apiKey = req.headers.get('x-api-key')
   if (apiKey !== process.env.PIPELINE_SECRET) {
@@ -30,22 +32,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       return NextResponse.json({ error: 'Pending draft not found' }, { status: 404 })
     }
 
-    const article = await payload.create({
-      collection: 'articles',
-      data: {
-        title: draft.title,
-        body: draft.body,
-        category: draft.category,
-        author: draft.author,
-        excerpt: draft.excerpt,
-        reviewNote: draft.reviewNote,
-        sourceUrls: draft.sourceUrls,
-        featuredImage: draft.featuredImage,
-        status: 'published',
-        publishedAt: new Date().toISOString(),
-      } as any,
-      overrideAccess: true,
-    })
+    const article = await promotePendingDraftToArticle(payload, draft)
 
     try {
       await payload.delete({

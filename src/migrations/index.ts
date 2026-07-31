@@ -29,6 +29,7 @@ import * as migration_20260727_165142_add_media_subjects_field from './20260727_
 import * as migration_20260729_122801_add_pending_drafts_collection from './20260729_122801_add_pending_drafts_collection';
 import * as migration_20260730_125111_add_pending_drafts_image_options from './20260730_125111_add_pending_drafts_image_options';
 import * as migration_20260731_105717_add_pending_drafts_status from './20260731_105717_add_pending_drafts_status';
+import * as migration_20260731_110502_add_pending_drafts_published_article_id from './20260731_110502_add_pending_drafts_published_article_id';
 
 export const migrations = [
   {
@@ -184,6 +185,11 @@ export const migrations = [
   {
     up: migration_20260731_105717_add_pending_drafts_status.up,
     down: migration_20260731_105717_add_pending_drafts_status.down,
-    name: '20260731_105717_add_pending_drafts_status'
+    name: '20260731_105717_add_pending_drafts_status',
+  },
+  {
+    up: migration_20260731_110502_add_pending_drafts_published_article_id.up,
+    down: migration_20260731_110502_add_pending_drafts_published_article_id.down,
+    name: '20260731_110502_add_pending_drafts_published_article_id'
   },
 ];

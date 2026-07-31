@@ -733,6 +733,10 @@ export interface PendingDraft {
   id: number;
   title: string;
   status: 'draft' | 'published';
+  /**
+   * Set automatically when this draft is published via the status field above — links to the resulting live Article.
+   */
+  publishedArticleId?: (number | null) | Article;
   category?: (number | null) | Category;
   /**
    * Byline shown on article page
@@ -1281,6 +1285,7 @@ export interface CarouselsSelect<T extends boolean = true> {
 export interface PendingDraftsSelect<T extends boolean = true> {
   title?: T;
   status?: T;
+  publishedArticleId?: T;
   category?: T;
   author?: T;
   keyword?: T;
