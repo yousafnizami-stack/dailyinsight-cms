@@ -29,6 +29,16 @@ export const PendingDrafts: CollectionConfig = {
       required: true,
     },
     {
+      name: 'status',
+      type: 'select',
+      options: [
+        { label: 'Draft', value: 'draft' },
+        { label: 'Published', value: 'published' },
+      ],
+      defaultValue: 'draft',
+      required: true,
+    },
+    {
       name: 'category',
       type: 'relationship',
       relationTo: 'categories',
