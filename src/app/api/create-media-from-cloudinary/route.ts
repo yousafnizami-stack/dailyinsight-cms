@@ -24,6 +24,31 @@ function deriveMimeType(cloudinaryFormat: unknown): string | undefined {
   return FORMAT_TO_MIME_TYPE[cloudinaryFormat.trim().toLowerCase()]
 }
 
+// filename has a UNIQUE index (media_filename_idx) — CONFIRMED REAL: scripts/backfill-
+// media-filename.mjs's own resolveFilename() hit exactly this collision live (two docs
+// from separate pipeline runs, same keyword+slot, deriving the identical filename) and
+// needed disambiguation to avoid crashing. Same root cause applies here going forward:
+// deriveImageTitle() (pipeline/keyword-pipeline-images.mjs) has no per-run uniqueness
+// token, so two runs for the same keyword+slot combination produce the identical title,
+// and therefore the identical candidate filename. Checked BEFORE payload.create() below,
+// so the collision never reaches the UNIQUE constraint in the first place. Unlike the
+// backfill script's id-suffix approach, no doc id exists yet at this point (the doc hasn't
+// been created) — a short Date.now() suffix is used instead, matching this codebase's own
+// established uniqueness convention (e.g. resolveImageFromUrl's own Cloudinary public_id:
+// `kw-${keywordSlug}-${roleLabel}-${Date.now()}`).
+async function resolveFilename(payload: Awaited<ReturnType<typeof getPayload>>, title: string, ext: string): Promise<string> {
+  const base = `${title}.${ext}`
+  const existing = await payload.find({
+    collection: 'media',
+    where: { filename: { equals: base } },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+  })
+  if (existing.docs.length === 0) return base
+  return `${title}-${Date.now()}.${ext}`
+}
+
 export async function POST(req: NextRequest) {
   const apiKey = req.headers.get('x-api-key')
   if (apiKey !== process.env.PIPELINE_SECRET) {
@@ -49,6 +74,17 @@ export async function POST(req: NextRequest) {
     // purely an admin-rendering gap, not a data-integrity one.
     const mimeType = deriveMimeType(cloudinaryFormat)
 
+    // filename drives Media's admin.useAsTitle (src/collections/Media.ts) — the list view's
+    // title column. This route never attaches a `file:` object (it only references an
+    // already-uploaded Cloudinary asset by URL/publicId), so Payload's own upload
+    // machinery — which normally derives filename automatically from an attached file —
+    // has nothing to populate it from. Resolved (with collision-checking, see
+    // resolveFilename above) BEFORE payload.create() below, since it needs its own async
+    // lookup.
+    const filename = typeof title === 'string'
+      ? await resolveFilename(payload, title, cloudinaryFormat || 'jpg')
+      : undefined
+
     const doc = await payload.create({
       collection: 'media',
       data: {
@@ -64,19 +100,10 @@ export async function POST(req: NextRequest) {
         // absent. Callers that don't pass them (e.g. carousel-pipeline.mjs, which this
         // task explicitly does not change) must see identical behavior to before: the
         // field simply omitted from data, so Media's own schema default (null) applies
-        // exactly as it always has.
-        //
-        // filename drives Media's admin.useAsTitle (src/collections/Media.ts) — the list
-        // view's title column. This route never attaches a `file:` object (it only
-        // references an already-uploaded Cloudinary asset by URL/publicId), so Payload's
-        // own upload machinery — which normally derives filename automatically from an
-        // attached file — has nothing to populate it from. Confirmed via live DB query
-        // that every doc created by this route previously had filename NULL despite title
-        // being set. Reusing the already-computed title (plus a real extension) closes
-        // that gap for both callers of this shared route (keyword-pipeline-images.mjs and
-        // carousel-pipeline.mjs) — same condition as title itself, so filename is only
-        // ever set when title actually is.
-        ...(typeof title === 'string' && { title, filename: `${title}.${cloudinaryFormat || 'jpg'}` }),
+        // exactly as it always has. filename is only ever set when title actually is —
+        // same condition as title itself — so carousel-pipeline.mjs (which never passes
+        // title) never triggers this branch, exactly as before this fix.
+        ...(typeof title === 'string' && { title, filename }),
         ...(typeof subjects === 'string' && { subjects }),
       } as any,
       overrideAccess: true,
