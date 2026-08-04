@@ -81,6 +81,7 @@ export interface Config {
     horoscopes: Horoscope;
     carousels: Carousel;
     'pending-drafts': PendingDraft;
+    'social-post-queue': SocialPostQueue;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -103,6 +104,7 @@ export interface Config {
     horoscopes: HoroscopesSelect<false> | HoroscopesSelect<true>;
     carousels: CarouselsSelect<false> | CarouselsSelect<true>;
     'pending-drafts': PendingDraftsSelect<false> | PendingDraftsSelect<true>;
+    'social-post-queue': SocialPostQueueSelect<false> | SocialPostQueueSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -804,6 +806,25 @@ export interface PendingDraft {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-post-queue".
+ */
+export interface SocialPostQueue {
+  id: number;
+  title: string;
+  articleUrl: string;
+  imageUrl: string;
+  /**
+   * The staggered target time this should post.
+   */
+  scheduledFor: string;
+  posted?: boolean | null;
+  postedAt?: string | null;
+  platform: 'facebook';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -907,6 +928,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pending-drafts';
         value: number | PendingDraft;
+      } | null)
+    | ({
+        relationTo: 'social-post-queue';
+        value: number | SocialPostQueue;
       } | null)
     | ({
         relationTo: 'users';
@@ -1300,6 +1325,21 @@ export interface PendingDraftsSelect<T extends boolean = true> {
   excerpt?: T;
   reviewNote?: T;
   imageOptions?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-post-queue_select".
+ */
+export interface SocialPostQueueSelect<T extends boolean = true> {
+  title?: T;
+  articleUrl?: T;
+  imageUrl?: T;
+  scheduledFor?: T;
+  posted?: T;
+  postedAt?: T;
+  platform?: T;
   updatedAt?: T;
   createdAt?: T;
 }

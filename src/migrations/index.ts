@@ -30,6 +30,7 @@ import * as migration_20260729_122801_add_pending_drafts_collection from './2026
 import * as migration_20260730_125111_add_pending_drafts_image_options from './20260730_125111_add_pending_drafts_image_options';
 import * as migration_20260731_105717_add_pending_drafts_status from './20260731_105717_add_pending_drafts_status';
 import * as migration_20260731_110502_add_pending_drafts_published_article_id from './20260731_110502_add_pending_drafts_published_article_id';
+import * as migration_20260804_162040_add_social_post_queue_collection from './20260804_162040_add_social_post_queue_collection';
 
 export const migrations = [
   {
@@ -190,6 +191,11 @@ export const migrations = [
   {
     up: migration_20260731_110502_add_pending_drafts_published_article_id.up,
     down: migration_20260731_110502_add_pending_drafts_published_article_id.down,
-    name: '20260731_110502_add_pending_drafts_published_article_id'
+    name: '20260731_110502_add_pending_drafts_published_article_id',
+  },
+  {
+    up: migration_20260804_162040_add_social_post_queue_collection.up,
+    down: migration_20260804_162040_add_social_post_queue_collection.down,
+    name: '20260804_162040_add_social_post_queue_collection'
   },
 ];
