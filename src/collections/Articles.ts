@@ -42,6 +42,87 @@ export const Articles: CollectionConfig = {
           console.error('Revalidation failed:', err)
         }
       },
+      // Auto-queue the article for Facebook the instant it transitions to published.
+      // Wrapped entirely in try/catch — any failure here must never block the article
+      // save itself; this is a background side-effect, not a required part of publishing.
+      async ({ doc, previousDoc, req }) => {
+        try {
+          // Only fire on the draft→published transition, not on every published save.
+          if (previousDoc?.status === 'published' || doc.status !== 'published') return
+
+          const slug: string | null = doc.slug || null
+          const category = doc.category
+          const categorySlug = typeof category === 'object' && category !== null ? (category as any).slug : null
+
+          if (!slug || !categorySlug) {
+            console.warn(`[social-post-queue] Skipping auto-queue for article ${doc.id} "${doc.title}" — missing slug or category slug`)
+            return
+          }
+
+          // Resolve featuredImage — at afterChange depth the relationship may be populated
+          // (object) or just an ID (number/string) depending on how the save was triggered.
+          let imageUrl: string | null = null
+          const fi = doc.featuredImage
+          if (typeof fi === 'object' && fi !== null) {
+            imageUrl = (fi as any).cloudinaryUrl || (fi as any).url || null
+          } else if (typeof fi === 'number' || typeof fi === 'string') {
+            try {
+              const media = await req.payload.findByID({ collection: 'media', id: fi as any })
+              imageUrl = (media as any)?.cloudinaryUrl || (media as any)?.url || null
+            } catch {
+              // leave imageUrl null — logged below
+            }
+          }
+
+          if (!imageUrl) {
+            console.warn(`[social-post-queue] Skipping auto-queue for article ${doc.id} "${doc.title}" — no featuredImage URL resolved`)
+            return
+          }
+
+          const articleUrl = `https://www.dailyinsight.co.uk/${categorySlug}/${slug}`
+
+          // Dedup: skip if already queued for this articleUrl.
+          const existing = await req.payload.find({
+            collection: 'social-post-queue',
+            where: { articleUrl: { equals: articleUrl } },
+            limit: 1,
+          })
+          if (existing.docs.length > 0) {
+            console.log(`[social-post-queue] Already queued for "${articleUrl}" — skipping`)
+            return
+          }
+
+          // Compute staggered scheduledFor: latest unposted entry's scheduledFor + 15 min,
+          // or now if the queue is empty.
+          const latestQueued = await req.payload.find({
+            collection: 'social-post-queue',
+            where: { posted: { equals: false } },
+            sort: '-scheduledFor',
+            limit: 1,
+          })
+          let scheduledFor: Date
+          if (latestQueued.docs.length > 0 && (latestQueued.docs[0] as any).scheduledFor) {
+            scheduledFor = new Date(new Date((latestQueued.docs[0] as any).scheduledFor).getTime() + 15 * 60 * 1000)
+          } else {
+            scheduledFor = new Date()
+          }
+
+          await req.payload.create({
+            collection: 'social-post-queue',
+            data: {
+              title: doc.title,
+              articleUrl,
+              imageUrl,
+              scheduledFor: scheduledFor.toISOString(),
+              platform: 'facebook',
+            } as any,
+          })
+
+          console.log(`[social-post-queue] Queued article ${doc.id} "${doc.title}" for Facebook at ${scheduledFor.toISOString()}`)
+        } catch (err: any) {
+          console.error(`[social-post-queue] Auto-queue failed for article ${doc.id} "${doc.title}": ${err.message}`)
+        }
+      },
     ],
     beforeChange: [
       async ({ data }) => {
