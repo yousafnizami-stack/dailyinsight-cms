@@ -74,7 +74,7 @@ export default buildConfig({
       // idleTimeoutMillis is the library default but set explicitly for clarity.
       // connectionTimeoutMillis bounds how long a function waits rather than hanging
       // forever (the current default of 0), surfacing connection failures fast.
-      max: 1,
+      max: 5,
       idleTimeoutMillis: 10000,
       connectionTimeoutMillis: 10000,
     },
