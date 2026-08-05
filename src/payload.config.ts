@@ -67,6 +67,16 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
+      // Vercel serverless: each concurrent function invocation can spin up its own pool
+      // instance — the default max:10 means N concurrent requests can open N×10 real
+      // Postgres connections against a 97-connection budget, directly causing "too many
+      // clients already" errors. max:1 caps usage to 1 connection per instance.
+      // idleTimeoutMillis is the library default but set explicitly for clarity.
+      // connectionTimeoutMillis bounds how long a function waits rather than hanging
+      // forever (the current default of 0), surfacing connection failures fast.
+      max: 1,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 10000,
     },
     push: true,
   }),
