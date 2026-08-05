@@ -46,6 +46,7 @@ export const Articles: CollectionConfig = {
       // Wrapped entirely in try/catch — any failure here must never block the article
       // save itself; this is a background side-effect, not a required part of publishing.
       async ({ doc, previousDoc, req }) => {
+        console.log('[FB-QUEUE-HOOK] Fired for article', doc.id, 'status:', doc.status, 'previousStatus:', previousDoc?.status)
         try {
           // Only fire on the draft→published transition, not on every published save.
           if (previousDoc?.status === 'published' || doc.status !== 'published') return
