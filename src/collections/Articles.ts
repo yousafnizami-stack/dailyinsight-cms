@@ -53,10 +53,26 @@ export const Articles: CollectionConfig = {
 
           const slug: string | null = doc.slug || null
           const category = doc.category
-          const categorySlug = typeof category === 'object' && category !== null ? (category as any).slug : null
+          console.log('[FB-QUEUE-HOOK] category shape:', typeof category, JSON.stringify(category))
+
+          // Resolve categorySlug — mirrors the featuredImage findByID fallback pattern:
+          // doc.category arrives as a bare ID (number/string) when the save context doesn't
+          // populate relationships, so we explicitly fetch it when needed rather than
+          // assuming it's already a populated object with a slug.
+          let categorySlug: string | null = null
+          if (typeof category === 'object' && category !== null) {
+            categorySlug = (category as any).slug || null
+          } else if (typeof category === 'number' || typeof category === 'string') {
+            try {
+              const categoryDoc = await req.payload.findByID({ collection: 'categories', id: category as any, depth: 0 })
+              categorySlug = (categoryDoc as any)?.slug || null
+            } catch {
+              // leave categorySlug null — logged below
+            }
+          }
 
           if (!slug || !categorySlug) {
-            console.warn(`[social-post-queue] Skipping auto-queue for article ${doc.id} "${doc.title}" — missing slug or category slug`)
+            console.warn(`[social-post-queue] Skipping auto-queue for article ${doc.id} "${doc.title}" — missing slug or category slug (slug: ${slug}, categorySlug: ${categorySlug})`)
             return
           }
 
