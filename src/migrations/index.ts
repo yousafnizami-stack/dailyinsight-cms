@@ -31,6 +31,7 @@ import * as migration_20260730_125111_add_pending_drafts_image_options from './2
 import * as migration_20260731_105717_add_pending_drafts_status from './20260731_105717_add_pending_drafts_status';
 import * as migration_20260731_110502_add_pending_drafts_published_article_id from './20260731_110502_add_pending_drafts_published_article_id';
 import * as migration_20260804_162040_add_social_post_queue_collection from './20260804_162040_add_social_post_queue_collection';
+import * as migration_20260806_120000_add_category_denorm_fields_to_articles from './20260806_120000_add_category_denorm_fields_to_articles';
 
 export const migrations = [
   {
@@ -197,5 +198,10 @@ export const migrations = [
     up: migration_20260804_162040_add_social_post_queue_collection.up,
     down: migration_20260804_162040_add_social_post_queue_collection.down,
     name: '20260804_162040_add_social_post_queue_collection'
+  },
+  {
+    up: migration_20260806_120000_add_category_denorm_fields_to_articles.up,
+    down: migration_20260806_120000_add_category_denorm_fields_to_articles.down,
+    name: '20260806_120000_add_category_denorm_fields_to_articles'
   },
 ];

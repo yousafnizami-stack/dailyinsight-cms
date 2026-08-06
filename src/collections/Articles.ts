@@ -205,6 +205,46 @@ export const Articles: CollectionConfig = {
         }
         return data
       },
+      // Denormalize category name+slug at save time so the mobile app can use depth=0
+      // and still get category info without extra DB round-trips.
+      // Mirrors the featuredImageUrl pattern above: resolve the relationship value
+      // (which may arrive as an id or a populated object) and copy scalars onto the doc.
+      async ({ data, req, originalDoc }) => {
+        const newCat = data.category
+        // Only re-resolve when the category field is actually being changed.
+        if (newCat === undefined) return data
+
+        const newId = typeof newCat === 'object' && newCat !== null ? (newCat as any).id : newCat
+        const oldId =
+          typeof originalDoc?.category === 'object' && originalDoc?.category !== null
+            ? (originalDoc.category as any).id
+            : originalDoc?.category
+        if (newId === oldId && originalDoc?.categorySlug) return data
+
+        try {
+          let categoryName: string | null = null
+          let categorySlug: string | null = null
+
+          if (typeof newCat === 'object' && newCat !== null) {
+            categoryName = (newCat as any).name || null
+            categorySlug = (newCat as any).slug || null
+          } else if (typeof newCat === 'number' || typeof newCat === 'string') {
+            const cat = await req.payload.findByID({
+              collection: 'categories',
+              id: newCat as any,
+              depth: 0,
+            })
+            categoryName = (cat as any)?.name || null
+            categorySlug = (cat as any)?.slug || null
+          }
+
+          if (categoryName) data.categoryName = categoryName
+          if (categorySlug) data.categorySlug = categorySlug
+        } catch (e) {
+          console.log('Category sync error:', e)
+        }
+        return data
+      },
     ],
   },
   fields: [
@@ -354,6 +394,16 @@ export const Articles: CollectionConfig = {
           afterInput: ['@/components/FeaturedImagePreview#FeaturedImagePreview'],
         },
       },
+    },
+    {
+      name: 'categoryName',
+      type: 'text',
+      admin: { hidden: true },
+    },
+    {
+      name: 'categorySlug',
+      type: 'text',
+      admin: { hidden: true },
     },
     {
       name: 'featuredImageAlt',
