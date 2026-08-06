@@ -225,6 +225,8 @@ export interface Article {
   featured?: boolean | null;
   slug: string;
   featuredImageUrl?: string | null;
+  categoryName?: string | null;
+  categorySlug?: string | null;
   featuredImageAlt?: string | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
@@ -1010,6 +1012,8 @@ export interface ArticlesSelect<T extends boolean = true> {
   featured?: T;
   slug?: T;
   featuredImageUrl?: T;
+  categoryName?: T;
+  categorySlug?: T;
   featuredImageAlt?: T;
   metaTitle?: T;
   metaDescription?: T;
